@@ -444,10 +444,11 @@ def comando_ejecutar(parametro, valor):
                 else:
                     id = "62" + num_particion + os.path.splitext(os.path.basename(script.getPath()))[0]
                     if not(id in particiones_montadas):   
-                        particiones_montadas[id] = script.getPath()
+                        #particiones_montadas[id] = script.getPath()
+                        particiones_montadas[id] = [script.getName(), script.getPath()]
                         print("Particiones montadas:")
                         for clave, valor in particiones_montadas.items():
-                            print(clave)
+                            print(clave[1])
                         print("\033[1;32m<<Success>> {}\033[00m" .format("Particion montada exitosamente."))
                         print("\033[36m<<System>> {}\033[00m" .format("...Comando mount ejecutado"))
                     else:
@@ -485,7 +486,8 @@ def comando_ejecutar(parametro, valor):
         elif (parametro.lower() == 'ejecutar'):
             #buscar particion o disco
             if script.getId() in particiones_montadas:
-                path = particiones_montadas[script.getId()]
+                name_part = particiones_montadas[script.getId()][0]
+                path = particiones_montadas[script.getId()][1]
                 if not(os.path.exists(path)):
                     return None
                 #obtener mbr
@@ -504,21 +506,59 @@ def comando_ejecutar(parametro, valor):
                     particion = particion.unpack_data(contenido)
                     mbr.getPartitions()[i] = particion
                     pos += particion.getLength()
-                #obtener nombre particion
-                num_particion = script.getId()[:script.getId().lower().index("d")]
-                num_particion = num_particion[2:]
+                #buscar particion
+                part_formatear = None
+                for i, partition in enumerate(mbr.getPartitions()):
+                    if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
+                        if (partition.getPart_name().rstrip("\x00") == name_part):
+                            part_formatear = partition
+                            break
+                    elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
+                        if (partition.getPart_name().rstrip("\x00") == name_part):
+                            part_formatear = partition
+                            break
+                        else:
+                            puntero = partition.getPart_start()
+                            #obtener ebr
+                            ebr = Ebr()
+                            with open(script.getPath(), 'rb+') as archivo:
+                                archivo.seek(puntero)
+                                contenido = archivo.read(ebr.getLength())
+                            ebr = ebr.unpack_data(contenido)
+                            while True:
+                                if (ebr.getPart_name().rstrip("\x00") == script.getName()):
+                                    part_formatear = partition
+                                    break
+                                if (ebr.getPart_next() == -1):
+                                    break
+                                else:
+                                    puntero = ebr.getPart_next()
+                                    #obtener ebr
+                                    ebr = Ebr()
+                                    with open(script.getPath(), 'rb+') as archivo:
+                                        archivo.seek(puntero)
+                                        contenido = archivo.read(ebr.getLength())
+                                    ebr = ebr.unpack_data(contenido)
                 #calculos
                 super_bloque = SuperBloque()
                 #archivo_bloque = ArchivoBloque()
                 inodo = Inodo()
-                numerator = mbr.getPartitions()[int(num_particion)-1].getPart_s() - super_bloque.getLength()
+                numerator = part_formatear.getPart_s() - super_bloque.getLength()
                 denominator = 4 + inodo.getLength() + 3 * 64
                 n = math.floor(numerator / denominator)
                 print(n)
+                with open('users.txt', 'wb') as archivo:
+                    # Escribe contenido en el archivo binario
+                    archivo.write(b'1, G, root\n')
+                    archivo.write(b'1, U, root, root, 123\n')
+                with open(path, 'rb+') as archivo:
+                    archivo.seek(part_formatear.getPart_start())
+                    archivo.write(b'1, G, root\n1, U, root, root, 123\n$')
                 return None
                 #####
             else:
                 print("\033[91m<<Error>> {}\033[00m" .format("La particion no existe."))
+                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo formatear la particion."))
         else:
             print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
         return None
@@ -534,6 +574,7 @@ def comando_ejecutar(parametro, valor):
             usuario_existe = False
             contraseña_correcta = False
             #leer archivo users.txt
+            '''
             with open("users.txt", "r") as archivo:
                 lineas = archivo.readlines()
             for linea in lineas:
@@ -544,6 +585,85 @@ def comando_ejecutar(parametro, valor):
                         if (script.getPassword() in usuario_grupo):
                             contraseña_correcta = True
                         break
+            '''
+            #AGREGADO
+            #buscar particion o disco
+            if script.getId() in particiones_montadas:
+                name_part = particiones_montadas[script.getId()][0]
+                path = particiones_montadas[script.getId()][1]
+                if not(os.path.exists(path)):
+                    return None
+                #obtener mbr
+                mbr = Mbr()
+                with open(path, 'rb+') as archivo:
+                    archivo.seek(0)
+                    contenido = archivo.read(mbr.getLength())
+                mbr = mbr.unpack_data(contenido)
+                #obtener particiones
+                pos = mbr.getLength()
+                for i in range(4):
+                    particion = Partition()
+                    with open(path, 'rb+') as archivo:
+                        archivo.seek(pos)
+                        contenido = archivo.read(particion.getLength())
+                    particion = particion.unpack_data(contenido)
+                    mbr.getPartitions()[i] = particion
+                    pos += particion.getLength()
+                #buscar particion
+                part_formateada = None
+                for i, partition in enumerate(mbr.getPartitions()):
+                    if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
+                        if (partition.getPart_name().rstrip("\x00") == name_part):
+                            part_formateada = partition
+                            break
+                    elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
+                        if (partition.getPart_name().rstrip("\x00") == name_part):
+                            part_formateada = partition
+                            break
+                        else:
+                            puntero = partition.getPart_start()
+                            #obtener ebr
+                            ebr = Ebr()
+                            with open(path, 'rb+') as archivo:
+                                archivo.seek(puntero)
+                                contenido = archivo.read(ebr.getLength())
+                            ebr = ebr.unpack_data(contenido)
+                            while True:
+                                if (ebr.getPart_name().rstrip("\x00") == script.getName()):
+                                    part_formateada = partition
+                                    break
+                                if (ebr.getPart_next() == -1):
+                                    break
+                                else:
+                                    puntero = ebr.getPart_next()
+                                    #obtener ebr
+                                    ebr = Ebr()
+                                    with open(path, 'rb+') as archivo:
+                                        archivo.seek(puntero)
+                                        contenido = archivo.read(ebr.getLength())
+                                    ebr = ebr.unpack_data(contenido)
+                #obtener arhivos users.txt
+                if part_formateada == None:
+                    return None
+                ini_archivo = part_formateada.getPart_start()
+                #buscar en archivo
+                pos = 0
+                with open(path, 'rb+') as archivo:
+                    archivo.seek(ini_archivo)
+                    while True:
+                        byte = archivo.read(1)
+                        if not byte:
+                            break
+                        if byte == b'$':
+                            break
+                        pos += 1
+                #obtener contenido de archivo users.txt
+                with open(path, 'rb+') as archivo:
+                    archivo.seek(ini_archivo)
+                    contenido = archivo.read(pos)
+                print(contenido)
+            #AGREGADO
+            '''
             if (usuario_existe):
                 if (contraseña_correcta):
                     print(f"¡Bienvenido {script.getUser()}!")
@@ -551,7 +671,8 @@ def comando_ejecutar(parametro, valor):
                 else:
                     print("¡Contraseña incorrecta!")
             else:
-                print("¡Usuario no existe!")          
+                print("¡Usuario no existe!")    
+            '''      
         else:
             print("¡Error! parametro no valido.")
         return None
@@ -860,7 +981,7 @@ def comando_ejecutar(parametro, valor):
                 path = ""
                 if script.getId() != "":
                     if script.getId() in particiones_montadas:   
-                        path = particiones_montadas[script.getId()]
+                        path = particiones_montadas[script.getId()][1]
                 if path == "":
                     print("\033[91m<<Error>> {}\033[00m" .format("La particion no esta montada."))
                     print("\033[91m<<Error>> {}\033[00m" .format("No se pudo generar el reporte."))
