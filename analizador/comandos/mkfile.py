@@ -21,7 +21,7 @@ class Mkfile:
 
     def setCont(self, cont):
         self.cont = cont.replace("user", self.username).replace('"', "")
-        if (not os.path.exists(self.path)):
+        if not(os.path.exists(self.cont)):
             print("¡Error! el archivo no existe.")
             self.errors += 1
 

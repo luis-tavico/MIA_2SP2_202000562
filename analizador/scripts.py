@@ -25,9 +25,10 @@ from analizador.comandos.rmusr import Rmusr
 from analizador.comandos.superBloque import SuperBloque
 from analizador.comandos.unmount import Unmount
 
-global comando, script, usuario_actual, particiones_montadas
-usuario_actual = ""
+global comando, script, particiones_montadas, usuario_actual, info
 particiones_montadas = {}
+usuario_actual = ""
+info = []
 
 def comando_activar(valor):
     global comando, script
@@ -79,7 +80,7 @@ def comando_activar(valor):
         print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando rep..."))
 
 def comando_ejecutar(parametro, valor):
-    global comando, script, usuario_actual, particiones_montadas
+    global comando, script, particiones_montadas, usuario_actual, info
     #COMANDO MKDISK
     if (comando.lower() == "mkdisk"):
         if (parametro.lower() == 'size'):
@@ -547,13 +548,18 @@ def comando_ejecutar(parametro, valor):
                 denominator = 4 + inodo.getLength() + 3 * 64
                 n = math.floor(numerator / denominator)
                 print(n)
+                #Escribir contenido en el archivo binario
+                '''
                 with open('users.txt', 'wb') as archivo:
-                    # Escribe contenido en el archivo binario
                     archivo.write(b'1, G, root\n')
                     archivo.write(b'1, U, root, root, 123\n')
+                '''
+                #Escribir archivo users.txt en particion
                 with open(path, 'rb+') as archivo:
                     archivo.seek(part_formatear.getPart_start())
-                    archivo.write(b'1, G, root\n1, U, root, root, 123\n$')
+                    contenido = ('1, G, root\n1, U, root, root, 123$').encode('utf-8')
+                    archivo.write(contenido)
+                print("Particion formateada exitosamente")
                 return None
                 #####
             else:
@@ -573,106 +579,118 @@ def comando_ejecutar(parametro, valor):
         elif(parametro.lower() == 'ejecutar'):
             usuario_existe = False
             contraseña_correcta = False
-            #leer archivo users.txt
-            '''
-            with open("users.txt", "r") as archivo:
-                lineas = archivo.readlines()
-            for linea in lineas:
-                usuario_grupo = linea.strip().split(", ")
-                if (usuario_grupo[1] == "U"):
-                    if (script.getUser() in usuario_grupo):
-                        usuario_existe = True
-                        if (script.getPassword() in usuario_grupo):
-                            contraseña_correcta = True
-                        break
-            '''
-            #AGREGADO
-            #buscar particion o disco
-            if script.getId() in particiones_montadas:
-                name_part = particiones_montadas[script.getId()][0]
-                path = particiones_montadas[script.getId()][1]
-                if not(os.path.exists(path)):
-                    return None
-                #obtener mbr
-                mbr = Mbr()
-                with open(path, 'rb+') as archivo:
-                    archivo.seek(0)
-                    contenido = archivo.read(mbr.getLength())
-                mbr = mbr.unpack_data(contenido)
-                #obtener particiones
-                pos = mbr.getLength()
-                for i in range(4):
-                    particion = Partition()
+            if (usuario_actual == ""):
+                #buscar particion en particiones montadas
+                if script.getId() in particiones_montadas:
+                    name_part = particiones_montadas[script.getId()][0]
+                    path = particiones_montadas[script.getId()][1]
+                    if not(os.path.exists(path)):
+                        print("¡el disco no existe!")
+                        return None
+                    #obtener mbr
+                    mbr = Mbr()
                     with open(path, 'rb+') as archivo:
-                        archivo.seek(pos)
-                        contenido = archivo.read(particion.getLength())
-                    particion = particion.unpack_data(contenido)
-                    mbr.getPartitions()[i] = particion
-                    pos += particion.getLength()
-                #buscar particion
-                part_formateada = None
-                for i, partition in enumerate(mbr.getPartitions()):
-                    if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
-                        if (partition.getPart_name().rstrip("\x00") == name_part):
-                            part_formateada = partition
-                            break
-                    elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
-                        if (partition.getPart_name().rstrip("\x00") == name_part):
-                            part_formateada = partition
-                            break
-                        else:
-                            puntero = partition.getPart_start()
-                            #obtener ebr
-                            ebr = Ebr()
-                            with open(path, 'rb+') as archivo:
-                                archivo.seek(puntero)
-                                contenido = archivo.read(ebr.getLength())
-                            ebr = ebr.unpack_data(contenido)
-                            while True:
-                                if (ebr.getPart_name().rstrip("\x00") == script.getName()):
-                                    part_formateada = partition
-                                    break
-                                if (ebr.getPart_next() == -1):
-                                    break
-                                else:
-                                    puntero = ebr.getPart_next()
-                                    #obtener ebr
-                                    ebr = Ebr()
-                                    with open(path, 'rb+') as archivo:
-                                        archivo.seek(puntero)
-                                        contenido = archivo.read(ebr.getLength())
-                                    ebr = ebr.unpack_data(contenido)
-                #obtener arhivos users.txt
-                if part_formateada == None:
-                    return None
-                ini_archivo = part_formateada.getPart_start()
-                #buscar en archivo
-                pos = 0
-                with open(path, 'rb+') as archivo:
-                    archivo.seek(ini_archivo)
-                    while True:
+                        archivo.seek(0)
+                        contenido = archivo.read(mbr.getLength())
+                    mbr = mbr.unpack_data(contenido)
+                    #obtener particiones
+                    pos = mbr.getLength()
+                    for i in range(4):
+                        particion = Partition()
+                        with open(path, 'rb+') as archivo:
+                            archivo.seek(pos)
+                            contenido = archivo.read(particion.getLength())
+                        particion = particion.unpack_data(contenido)
+                        mbr.getPartitions()[i] = particion
+                        pos += particion.getLength()
+                    #buscar particion
+                    part_formateada = None
+                    for i, partition in enumerate(mbr.getPartitions()):
+                        if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
+                            if (partition.getPart_name().rstrip("\x00") == name_part):
+                                part_formateada = partition
+                                break
+                        elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
+                            if (partition.getPart_name().rstrip("\x00") == name_part):
+                                part_formateada = partition
+                                break
+                            else:
+                                puntero = partition.getPart_start()
+                                #obtener ebr
+                                ebr = Ebr()
+                                with open(path, 'rb+') as archivo:
+                                    archivo.seek(puntero)
+                                    contenido = archivo.read(ebr.getLength())
+                                ebr = ebr.unpack_data(contenido)
+                                while True:
+                                    if (ebr.getPart_name().rstrip("\x00") == script.getName()):
+                                        part_formateada = partition
+                                        break
+                                    if (ebr.getPart_next() == -1):
+                                        break
+                                    else:
+                                        puntero = ebr.getPart_next()
+                                        #obtener ebr
+                                        ebr = Ebr()
+                                        with open(path, 'rb+') as archivo:
+                                            archivo.seek(puntero)
+                                            contenido = archivo.read(ebr.getLength())
+                                        ebr = ebr.unpack_data(contenido)
+                    #obtener inicio de archivos users.txt
+                    if part_formateada == None:
+                        print("No se encontro la particion")
+                        return None
+                    ini_archivo = part_formateada.getPart_start()
+                    #verificar si esta formateada la particion
+                    with open(path, 'rb+') as archivo:
+                        archivo.seek(ini_archivo)
                         byte = archivo.read(1)
-                        if not byte:
-                            break
-                        if byte == b'$':
-                            break
-                        pos += 1
-                #obtener contenido de archivo users.txt
-                with open(path, 'rb+') as archivo:
-                    archivo.seek(ini_archivo)
-                    contenido = archivo.read(pos)
-                print(contenido)
-            #AGREGADO
-            '''
-            if (usuario_existe):
-                if (contraseña_correcta):
-                    print(f"¡Bienvenido {script.getUser()}!")
-                    usuario_actual = script.getUser()
+                        if byte == b'\x00':
+                            print(f"La particion {part_formateada.getPart_name()} no esta formateada")
+                            return None
+                    #obtener longitud de archivo users.txt
+                    pos = 0
+                    with open(path, 'rb+') as archivo:
+                        archivo.seek(ini_archivo)
+                        while True:
+                            byte = archivo.read(1)
+                            if not byte:
+                                break
+                            if byte == b'$':
+                                break
+                            pos += 1
+                    #obtener contenido de archivo users.txt
+                    with open(path, 'rb+') as archivo:
+                        archivo.seek(ini_archivo)
+                        contenido = archivo.read(pos)
+                    contenido = contenido.decode('utf-8')
+                    lineas = contenido.splitlines()
+                    #info = [ruta_disco, posicion_particion, contenido]
+                    info.append(path)
+                    info.append(ini_archivo)
+                    info.append(contenido)
+                    #verificar si existe usuario
+                    for linea in lineas:
+                        usuario_grupo = linea.strip().split(", ")
+                        if (usuario_grupo[1] == "U"):
+                            if (script.getUser() in usuario_grupo):
+                                usuario_existe = True
+                                if (script.getPassword() in usuario_grupo):
+                                    contraseña_correcta = True
+                                break
+                    if (usuario_existe):
+                        if (contraseña_correcta):
+                            print(f"¡Bienvenido {script.getUser()}!")
+                            usuario_actual = script.getUser()
+                        else:
+                            print("¡Contraseña incorrecta!")
+                    else:
+                        print("¡Usuario no existe!")
                 else:
-                    print("¡Contraseña incorrecta!")
+                    print("la particion no esta montada.")
+
             else:
-                print("¡Usuario no existe!")    
-            '''      
+                print("Ya hay una sesion activa")
         else:
             print("¡Error! parametro no valido.")
         return None
@@ -681,6 +699,8 @@ def comando_ejecutar(parametro, valor):
         if (parametro.lower() == 'ejecutar'):
             if (usuario_actual != ""):
                 usuario_actual = ""
+                info.clear()
+                print("¡Sesion cerrada!")
             else:
                 print("¡Error! no existe una sesion activa.")
         return None
@@ -693,8 +713,9 @@ def comando_ejecutar(parametro, valor):
                 num = 1
                 grupo_existe = False
                 #leer archivo users.txt
-                with open("users.txt", "r") as archivo:
-                    lineas = archivo.readlines()
+                #info = [ruta_disco, posicion_particion, contenido]
+                contenido = info[2]
+                lineas = contenido.splitlines()
                 for linea in lineas:
                     usuario_grupo = linea.strip().split(", ")
                     if (usuario_grupo[1] == "G"):
@@ -704,9 +725,12 @@ def comando_ejecutar(parametro, valor):
                         else:
                             num += 1
                 if (not grupo_existe):
-                    #editar archivo
-                    with open("users.txt", 'a') as archivo:
-                        archivo.write(str(num) + ", G, " + script.getName() + "\n")
+                    #editar archivo users.txt
+                    info[2] = contenido + "\n" + str(num) + ", G, " + script.getName()
+                    #Escribir en archivo users.txt
+                    with open(info[0], 'rb+') as archivo:
+                        archivo.seek(info[1])
+                        archivo.write((info[2]+"$").encode('utf-8'))                   
                     print("¡Grupo creado exitosamente!")
                 else:
                     print("¡Error! el grupo a crear ya existe.")
@@ -727,22 +751,25 @@ def comando_ejecutar(parametro, valor):
                 grupo_existe = False
                 pos = None
                 #leer archivo users.txt
-                with open("users.txt", "r") as archivo:
-                    lineas = archivo.readlines()
+                #info = [ruta_disco, posicion_particion, contenido]
+                contenido = info[2]
+                lineas = contenido.splitlines()
                 for i, linea in enumerate(lineas):
                     usuario_grupo = linea.strip().split(", ")
                     if (usuario_grupo[1] == "G"):
                         if (script.getName() in usuario_grupo):
-                            cont_editado = "0, " + usuario_grupo[1] + ", " + usuario_grupo[2] + "\n"
+                            cont_editado = "0, " + usuario_grupo[1] + ", " + usuario_grupo[2]
                             grupo_existe = True
                             pos = i
                             break
                 if (grupo_existe):
                     lineas[pos] = cont_editado
-                    #escribir las líneas de nuevo en el archivo
-                    with open("users.txt", 'w') as archivo:
-                        archivo.writelines(lineas)
-                    print("¡Grupo eliminado exitosamente!")
+                    info[2] = "\n".join(lineas)
+                    #Escribir en archivo users.txt
+                    with open(info[0], 'rb+') as archivo:
+                        archivo.seek(info[1])
+                        archivo.write((info[2]+"$").encode('utf-8'))
+                    print("¡Grupo eliminado exitosamente!")               
                 else:
                     print("¡Error! el grupo a eliminar no existe")
             elif (usuario_actual == ""):
@@ -767,8 +794,9 @@ def comando_ejecutar(parametro, valor):
                     grupo_existe = False
                     pos = None
                     #leer archivo users.txt
-                    with open("users.txt", "r") as archivo:
-                        lineas = archivo.readlines()
+                    #info = [ruta_disco, posicion_particion, contenido]
+                    contenido = info[2]
+                    lineas = contenido.splitlines()
                     for i, linea in enumerate(lineas):
                         usuario_grupo = linea.strip().split(", ")
                         if (usuario_grupo[1] == "U"):
@@ -779,10 +807,13 @@ def comando_ejecutar(parametro, valor):
                                 grupo_existe = True
                                 pos = usuario_grupo[0]
                     if (grupo_existe):
-                        if (not usuario_existe):
-                            #editar archivo
-                            with open("users.txt", 'a') as archivo:
-                                archivo.write(pos + ", U, " + script.getGrp() + ", " + script.getUser() + ", " + script.getPassword() + "\n")
+                        if not usuario_existe:
+                            #editar archivo users.txt
+                            info[2] = contenido + "\n" + pos + ", U, " + script.getGrp() + ", " + script.getUser() + ", " + script.getPassword()
+                            #Escribir en archivo users.txt
+                            with open(info[0], 'rb+') as archivo:
+                                archivo.seek(info[1])
+                                archivo.write((info[2]+"$").encode('utf-8'))                   
                             print("¡Usuario creado exitosamente!")
                         else:
                             print("¡Error! el usuario a crear ya existe.")
@@ -807,21 +838,24 @@ def comando_ejecutar(parametro, valor):
                 usuario_existe = False
                 pos = None
                 #leer archivo users.txt
-                with open("users.txt", "r") as archivo:
-                    lineas = archivo.readlines()
+                #info = [ruta_disco, posicion_particion, contenido]
+                contenido = info[2]
+                lineas = contenido.splitlines()
                 for i, linea in enumerate(lineas):
                     usuario_grupo = linea.strip().split(", ")
                     if (usuario_grupo[1] == "U"):
                         if (script.getUser() in usuario_grupo):
-                            cont_editado = "0, " + "U, " + usuario_grupo[2] + ", " + usuario_grupo[3] + ", " + usuario_grupo[4] + "\n"
+                            cont_editado = "0, " + "U, " + usuario_grupo[2] + ", " + usuario_grupo[3] + ", " + usuario_grupo[4]
                             usuario_existe = True
                             pos = i
                             break
                 if (usuario_existe):
                     lineas[pos] = cont_editado
-                    #escribir las líneas de nuevo en el archivo
-                    with open("users.txt", 'w') as archivo:
-                        archivo.writelines(lineas)
+                    info[2] = "\n".join(lineas)
+                    #Escribir en archivo users.txt
+                    with open(info[0], 'rb+') as archivo:
+                        archivo.seek(info[1])
+                        archivo.write((info[2]+"$").encode('utf-8'))
                     print("¡Usuario eliminado exitosamente!")
                 else:
                     print("¡Error! el usuario a eliminar no existe")
@@ -844,43 +878,12 @@ def comando_ejecutar(parametro, valor):
             script.setCont(valor)
         elif ('ejecutar'):
             if script.errors == 0:
-                if (script.getR()):
-                    carpetas = os.path.dirname(script.getPath())
-                    if (not os.path.exists(script.getPath())):
-                        if (not os.path.exists(carpetas)):
-                            os.makedirs(carpetas)
-                        contenido = ""
-                        if (script.getSize() != 0):
-                            num = 0
-                            for i in range(script.getSize()):
-                                if (num == 10): num = 0
-                                contenido += str(num)
-                                num += 1
-                        if (script.getCont() != ""):
-                            with open(script.getCont(), "r") as archivo:
-                                contenido = archivo.read()
-                        with open(script.getPath(), "w") as archivo:
-                            archivo.write(contenido)
-                    else:
-                        respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (y/n)")
-                        if (respuesta == "s"):
-                            #pendiente                       
-                            contenido = ""
-                            if (script.getSize() != 0):
-                                num = 0
-                                for i in range(script.getSize()):
-                                    if (num == 10): num = 0
-                                    contenido += str(num)
-                                    num += 1
-                            if (script.getCont() != ""):
-                                with open(script.getCont(), "r") as archivo:
-                                    contenido = archivo.read()
-                            with open(script.getPath(), "a") as archivo:
-                                archivo.write(contenido)
-                else:
-                    carpetas = os.path.dirname(script.getPath())
-                    if (not os.path.exists(script.getPath())):
-                        if (os.path.exists(carpetas)):
+                if (usuario_actual != ""):
+                    if (script.getR()):
+                        carpetas = os.path.dirname(script.getPath())
+                        if (not os.path.exists(script.getPath())):
+                            if (not os.path.exists(carpetas)):
+                                os.makedirs(carpetas)
                             contenido = ""
                             if (script.getSize() != 0):
                                 num = 0
@@ -893,24 +896,60 @@ def comando_ejecutar(parametro, valor):
                                     contenido = archivo.read()
                             with open(script.getPath(), "w") as archivo:
                                 archivo.write(contenido)
+                            print("Archivo creado exitosamente")
                         else:
-                            print("¡Error! la ruta de carpetas no existe.")
+                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (y/n)")
+                            if (respuesta == "s"):
+                                #pendiente                       
+                                contenido = ""
+                                if (script.getSize() != 0):
+                                    num = 0
+                                    for i in range(script.getSize()):
+                                        if (num == 10): num = 0
+                                        contenido += str(num)
+                                        num += 1
+                                if (script.getCont() != ""):
+                                    with open(script.getCont(), "r") as archivo:
+                                        contenido = archivo.read()
+                                with open(script.getPath(), "a") as archivo:
+                                    archivo.write(contenido)
                     else:
-                        respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (y/n)")
-                        if (respuesta == "s"):
-                            #pendiente                       
-                            contenido = ""
-                            if (script.getSize() != 0):
-                                num = 0
-                                for i in range(script.getSize()):
-                                    if (num == 10): num = 0
-                                    contenido += str(num)
-                                    num += 1
-                            if (script.getCont() != ""):
-                                with open(script.getCont(), "r") as archivo:
-                                    contenido = archivo.read()
-                            with open(script.getPath(), "a") as archivo:
-                                archivo.write(contenido)
+                        carpetas = os.path.dirname(script.getPath())
+                        if (not os.path.exists(script.getPath())):
+                            if (os.path.exists(carpetas)):
+                                contenido = ""
+                                if (script.getSize() != 0):
+                                    num = 0
+                                    for i in range(script.getSize()):
+                                        if (num == 10): num = 0
+                                        contenido += str(num)
+                                        num += 1
+                                if (script.getCont() != ""):
+                                    with open(script.getCont(), "r") as archivo:
+                                        contenido = archivo.read()
+                                with open(script.getPath(), "w") as archivo:
+                                    archivo.write(contenido)
+                                print("Archivo creado exitosamente")
+                            else:
+                                print("¡Error! la ruta de carpetas no existe.")
+                        else:
+                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (y/n)")
+                            if (respuesta == "s"):
+                                #pendiente                       
+                                contenido = ""
+                                if (script.getSize() != 0):
+                                    num = 0
+                                    for i in range(script.getSize()):
+                                        if (num == 10): num = 0
+                                        contenido += str(num)
+                                        num += 1
+                                if (script.getCont() != ""):
+                                    with open(script.getCont(), "r") as archivo:
+                                        contenido = archivo.read()
+                                with open(script.getPath(), "a") as archivo:
+                                    archivo.write(contenido)
+                else:
+                    print("¡Error! ningun usuario ha iniciado sesion.")
             else:
                 print('¡Error! no se pudo crear el archivo.')
         else:
