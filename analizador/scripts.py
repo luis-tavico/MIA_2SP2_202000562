@@ -898,7 +898,7 @@ def comando_ejecutar(parametro, valor):
                                 archivo.write(contenido)
                             print("Archivo creado exitosamente")
                         else:
-                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (y/n)")
+                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (s/n)")
                             if (respuesta == "s"):
                                 #pendiente                       
                                 contenido = ""
@@ -911,7 +911,7 @@ def comando_ejecutar(parametro, valor):
                                 if (script.getCont() != ""):
                                     with open(script.getCont(), "r") as archivo:
                                         contenido = archivo.read()
-                                with open(script.getPath(), "a") as archivo:
+                                with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
                     else:
                         carpetas = os.path.dirname(script.getPath())
@@ -927,13 +927,13 @@ def comando_ejecutar(parametro, valor):
                                 if (script.getCont() != ""):
                                     with open(script.getCont(), "r") as archivo:
                                         contenido = archivo.read()
-                                with open(script.getPath(), "w") as archivo:
+                                with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
                                 print("Archivo creado exitosamente")
                             else:
                                 print("¡Error! la ruta de carpetas no existe.")
                         else:
-                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (y/n)")
+                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (s/n)")
                             if (respuesta == "s"):
                                 #pendiente                       
                                 contenido = ""
@@ -946,7 +946,7 @@ def comando_ejecutar(parametro, valor):
                                 if (script.getCont() != ""):
                                     with open(script.getCont(), "r") as archivo:
                                         contenido = archivo.read()
-                                with open(script.getPath(), "a") as archivo:
+                                with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
                 else:
                     print("¡Error! ningun usuario ha iniciado sesion.")
@@ -986,7 +986,6 @@ def comando_ejecutar(parametro, valor):
     elif (comando.lower() == 'execute'):
         if (parametro.lower() == "path"):
             print("leyendo ruta del archivo...")
-            print(valor)
             script.setPath(valor)
         elif (parametro.lower() == 'ejecutar'):
             if script.errors == 0:
@@ -1016,34 +1015,76 @@ def comando_ejecutar(parametro, valor):
             script.setRuta(valor)
         elif (parametro.lower() == "ejecutar"):
             if (script.errors == 0):
-                #buscar particion o disco
+                #buscar particion en particiones montadas
                 path = ""
                 if script.getId() != "":
                     if script.getId() in particiones_montadas:   
+                        name_part = particiones_montadas[script.getId()][0]
                         path = particiones_montadas[script.getId()][1]
-                if path == "":
-                    print("\033[91m<<Error>> {}\033[00m" .format("La particion no esta montada."))
-                    print("\033[91m<<Error>> {}\033[00m" .format("No se pudo generar el reporte."))
-                    return None
+                    else:
+                        print("\033[91m<<Error>> {}\033[00m" .format("La particion no esta montada."))
+                        print("\033[91m<<Error>> {}\033[00m" .format("No se pudo generar el reporte."))
+                        return None
                 if not(os.path.exists(path)):
+                    print("¡el disco no existe!")
                     return None
-                #obtener mbr
-                mbr = Mbr()
-                with open(path, 'rb+') as archivo:
-                    archivo.seek(0)
-                    contenido = archivo.read(mbr.getLength())
-                mbr = mbr.unpack_data(contenido)
-                #obtener particiones
-                pos = 21
-                for i in range(4):
-                    particion = Partition()
+                if (script.getName().lower() == "file"):
+                    #obtener mbr
+                    mbr = Mbr()
                     with open(path, 'rb+') as archivo:
-                        archivo.seek(pos)
-                        contenido = archivo.read(28)
-                    particion = particion.unpack_data(contenido)
-                    mbr.getPartitions()[i] = particion
-                    pos += 28
-                if (script.getName().lower() == "mbr"):
+                        archivo.seek(0)
+                        contenido = archivo.read(mbr.getLength())
+                    mbr = mbr.unpack_data(contenido)
+                    #obtener particiones
+                    pos = 21
+                    for i in range(4):
+                        particion = Partition()
+                        with open(path, 'rb+') as archivo:
+                            archivo.seek(pos)
+                            contenido = archivo.read(28)
+                        particion = particion.unpack_data(contenido)
+                        mbr.getPartitions()[i] = particion
+                        pos += particion.getLength()
+                    #buscar particion
+                    part_formateada = None
+                    for i, partition in enumerate(mbr.getPartitions()):
+                        if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
+                            if (partition.getPart_name().rstrip("\x00") == name_part):
+                                part_formateada = partition
+                                break
+                        elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
+                            if (partition.getPart_name().rstrip("\x00") == name_part):
+                                part_formateada = partition
+                                break
+                            else:
+                                puntero = partition.getPart_start()
+                                #obtener ebr
+                                ebr = Ebr()
+                                with open(path, 'rb+') as archivo:
+                                    archivo.seek(puntero)
+                                    contenido = archivo.read(ebr.getLength())
+                                ebr = ebr.unpack_data(contenido)
+                                while True:
+                                    if (ebr.getPart_name().rstrip("\x00") == script.getName()):
+                                        part_formateada = partition
+                                        break
+                                    if (ebr.getPart_next() == -1):
+                                        break
+                                    else:
+                                        puntero = ebr.getPart_next()
+                                        #obtener ebr
+                                        ebr = Ebr()
+                                        with open(path, 'rb+') as archivo:
+                                            archivo.seek(puntero)
+                                            contenido = archivo.read(ebr.getLength())
+                                        ebr = ebr.unpack_data(contenido)
+                    #verificar si existe la particion
+                    if part_formateada == None:
+                        print("No se encontro la particion")
+                        return None
+                    #generar reporte
+                    generarReporteArchivo(path, part_formateada, script.getRuta(), script.getPath())                    
+                elif (script.getName().lower() == "mbr"):
                     generarReporteMBR(path, script.getPath())
                 elif (script.getName().lower() == "disk"):
                     generarReporteDisco(path, script.getPath())
@@ -1335,6 +1376,42 @@ def generarReporteDisco(path, pathReport):
         command = ["dot", "-Tpng", "reportes/reporte_disco.dot", "-o", pathReport]
 
     subprocess.run(command, check=True)
+
+def generarReporteArchivo(path, part_formateada, ruta, pathReport):
+    if ruta == '"/users.txt"':
+        #obtener inicio de archivos users.txt
+        ini_archivo = part_formateada.getPart_start()
+        #verificar si esta formateada la particion
+        with open(path, 'rb+') as archivo:
+            archivo.seek(ini_archivo)
+            byte = archivo.read(1)
+            if byte == b'\x00':
+                print(f"La particion {part_formateada.getPart_name()} no esta formateada")
+                return None
+        #obtener longitud de archivo users.txt
+        pos = 0
+        with open(path, 'rb+') as archivo:
+            archivo.seek(ini_archivo)
+            while True:
+                byte = archivo.read(1)
+                if not byte:
+                    break
+                if byte == b'$':
+                    break
+                pos += 1
+        #obtener contenido de archivo users.txt
+        with open(path, 'rb+') as archivo:
+            archivo.seek(ini_archivo)
+            contenido = archivo.read(pos)
+        contenido = contenido.decode('utf-8')
+        #crear reporte
+        with open(pathReport, 'w') as archivo:
+            archivo.write(contenido)
+        print(pathReport)
+        print(contenido)
+    else:
+        pass
+
 
 def verificarNombre(pathReport):
     n = 1

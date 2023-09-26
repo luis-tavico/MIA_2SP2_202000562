@@ -35,7 +35,8 @@ reserved_words = {
     'pass': 'PASS',
     'grp' : 'GRP',
     'r' : 'R',
-    'cont' : 'CONT'
+    'cont' : 'CONT',
+    'ruta' : 'RUTA'
     #Valores
 }
 
@@ -58,31 +59,31 @@ t_GUION = r'-'
 t_IGUAL = r'='
 
 def t_RUTA_ARCHIVO_TXT(t):
-    r'(\"(\/(\w|\s)+)+\.txt\")|((\/\w+)+\.txt)'
+    r'(\"(\/(\w|\s|-)+)+\.txt\")|((\/(\w|-)+)+\.txt)'
     return t
 
 def t_RUTA_ARCHIVO_ADSJ(t):
-    r'(\"(\/(\w|\s)+)+\.adsj\")|((\/\w+)+\.adsj)'
+    r'(\"(\/(\w|\s|-)+)+\.adsj\")|((\/(\w|-)+)+\.adsj)'
     return t
 
 def t_RUTA_DISCO(t):
-    r'(\"(\/(\w|\s)+)+\.dsk\")|((\/\w+)+\.dsk)'
+    r'(\"(\/(\w|\s|-)+)+\.dsk\")|((\/(\w|-)+)+\.dsk)'
     return t
 
 def t_RUTA_IMAGEN(t):
-    r'(\"(\/(\w|\s)+)+\.jpg\")|((\/\w+)+\.jpg)|(\"(\/(\w|\s)+)+\.png\")|((\/\w+)+\.png)'
+    r'(\"(\/(\w|\s|-)+)+\.jpg\")|((\/(\w|-)+)+\.jpg)|(\"(\/(\w|\s|-)+)+\.png\")|((\/(\w|-)+)+\.png)'
     return t
 
 def t_RUTA_CARPETA(t):
-    r'(\"(\/(\w|\s)+)+\")|((\/\w+)+)'
+    r'(\"(\/(\w|\s|-)+)+\")|((\/(\w|-)+)+)'
     return t
 
 def t_NOMBRE_ARCHIVO(t):
-    r'(\"(\w|\s)+\.txt\")|((\w)+\.txt)'
+    r'(\"(\w|\s|-)+\.txt\")|((\w|-)+\.txt)'
     return t
 
 def t_CADENA(t):
-    r'[a-zA-z_0-9][a-zA-z_0-9]*'
+    r'[a-zA-z_0-9]+'
     t.type = reserved_words.get(t.value.lower(), 'CADENA')
     return t
 
@@ -176,7 +177,8 @@ def p_param(t):
              | USER
              | PASS
              | GRP
-             | CONT'''
+             | CONT
+             | RUTA'''
     t[0] = t[1]
 
 def p_valor(t):
