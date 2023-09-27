@@ -1,0 +1,1186 @@
+Created by PLY version 3.11 (http://www.dabeaz.com/ply)
+
+Grammar
+
+Rule 0     S' -> instrucciones
+Rule 1     instrucciones -> instruccion instrucciones
+Rule 2     instrucciones -> instruccion
+Rule 3     instruccion -> comando parametros
+Rule 4     instruccion -> comando
+Rule 5     comando -> MKDISK
+Rule 6     comando -> RMDISK
+Rule 7     comando -> FDISK
+Rule 8     comando -> MOUNT
+Rule 9     comando -> UNMOUNT
+Rule 10    comando -> MKFS
+Rule 11    comando -> LOGIN
+Rule 12    comando -> LOGOUT
+Rule 13    comando -> MKGRP
+Rule 14    comando -> RMGRP
+Rule 15    comando -> MKUSR
+Rule 16    comando -> RMUSR
+Rule 17    comando -> MKFILE
+Rule 18    comando -> MKDIR
+Rule 19    comando -> PAUSE
+Rule 20    comando -> EXECUTE
+Rule 21    comando -> REP
+Rule 22    comando -> COMENTARIO
+Rule 23    parametros -> parametro parametros
+Rule 24    parametros -> parametro
+Rule 25    parametro -> argumento
+Rule 26    parametro -> opcion
+Rule 27    argumento -> GUION param IGUAL valor
+Rule 28    param -> SIZE
+Rule 29    param -> PATH
+Rule 30    param -> FIT
+Rule 31    param -> UNIT
+Rule 32    param -> NAME
+Rule 33    param -> TYPE
+Rule 34    param -> ID
+Rule 35    param -> USER
+Rule 36    param -> PASS
+Rule 37    param -> GRP
+Rule 38    param -> CONT
+Rule 39    param -> RUTA
+Rule 40    valor -> ENTERO
+Rule 41    valor -> RUTA_ARCHIVO
+Rule 42    valor -> RUTA_CARPETA
+Rule 43    valor -> NOMBRE_ARCHIVO
+Rule 44    valor -> CADENA
+Rule 45    opcion -> GUION R
+
+Terminals, with rules where they appear
+
+CADENA               : 44
+COMENTARIO           : 22
+CONT                 : 38
+ENTERO               : 40
+EXECUTE              : 20
+FDISK                : 7
+FIT                  : 30
+GRP                  : 37
+GUION                : 27 45
+ID                   : 34
+IGUAL                : 27
+LOGIN                : 11
+LOGOUT               : 12
+MKDIR                : 18
+MKDISK               : 5
+MKFILE               : 17
+MKFS                 : 10
+MKGRP                : 13
+MKUSR                : 15
+MOUNT                : 8
+NAME                 : 32
+NOMBRE_ARCHIVO       : 43
+PASS                 : 36
+PATH                 : 29
+PAUSE                : 19
+R                    : 45
+REP                  : 21
+RMDISK               : 6
+RMGRP                : 14
+RMUSR                : 16
+RUTA                 : 39
+RUTA_ARCHIVO         : 41
+RUTA_CARPETA         : 42
+SIZE                 : 28
+TYPE                 : 33
+UNIT                 : 31
+UNMOUNT              : 9
+USER                 : 35
+error                : 
+
+Nonterminals, with rules where they appear
+
+argumento            : 25
+comando              : 3 4
+instruccion          : 1 2
+instrucciones        : 1 0
+opcion               : 26
+param                : 27
+parametro            : 23 24
+parametros           : 3 23
+valor                : 27
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . instrucciones
+    (1) instrucciones -> . instruccion instrucciones
+    (2) instrucciones -> . instruccion
+    (3) instruccion -> . comando parametros
+    (4) instruccion -> . comando
+    (5) comando -> . MKDISK
+    (6) comando -> . RMDISK
+    (7) comando -> . FDISK
+    (8) comando -> . MOUNT
+    (9) comando -> . UNMOUNT
+    (10) comando -> . MKFS
+    (11) comando -> . LOGIN
+    (12) comando -> . LOGOUT
+    (13) comando -> . MKGRP
+    (14) comando -> . RMGRP
+    (15) comando -> . MKUSR
+    (16) comando -> . RMUSR
+    (17) comando -> . MKFILE
+    (18) comando -> . MKDIR
+    (19) comando -> . PAUSE
+    (20) comando -> . EXECUTE
+    (21) comando -> . REP
+    (22) comando -> . COMENTARIO
+
+    MKDISK          shift and go to state 4
+    RMDISK          shift and go to state 5
+    FDISK           shift and go to state 6
+    MOUNT           shift and go to state 7
+    UNMOUNT         shift and go to state 8
+    MKFS            shift and go to state 9
+    LOGIN           shift and go to state 10
+    LOGOUT          shift and go to state 11
+    MKGRP           shift and go to state 12
+    RMGRP           shift and go to state 13
+    MKUSR           shift and go to state 14
+    RMUSR           shift and go to state 15
+    MKFILE          shift and go to state 16
+    MKDIR           shift and go to state 17
+    PAUSE           shift and go to state 18
+    EXECUTE         shift and go to state 19
+    REP             shift and go to state 20
+    COMENTARIO      shift and go to state 21
+
+    instrucciones                  shift and go to state 1
+    instruccion                    shift and go to state 2
+    comando                        shift and go to state 3
+
+state 1
+
+    (0) S' -> instrucciones .
+
+
+
+state 2
+
+    (1) instrucciones -> instruccion . instrucciones
+    (2) instrucciones -> instruccion .
+    (1) instrucciones -> . instruccion instrucciones
+    (2) instrucciones -> . instruccion
+    (3) instruccion -> . comando parametros
+    (4) instruccion -> . comando
+    (5) comando -> . MKDISK
+    (6) comando -> . RMDISK
+    (7) comando -> . FDISK
+    (8) comando -> . MOUNT
+    (9) comando -> . UNMOUNT
+    (10) comando -> . MKFS
+    (11) comando -> . LOGIN
+    (12) comando -> . LOGOUT
+    (13) comando -> . MKGRP
+    (14) comando -> . RMGRP
+    (15) comando -> . MKUSR
+    (16) comando -> . RMUSR
+    (17) comando -> . MKFILE
+    (18) comando -> . MKDIR
+    (19) comando -> . PAUSE
+    (20) comando -> . EXECUTE
+    (21) comando -> . REP
+    (22) comando -> . COMENTARIO
+
+    $end            reduce using rule 2 (instrucciones -> instruccion .)
+    MKDISK          shift and go to state 4
+    RMDISK          shift and go to state 5
+    FDISK           shift and go to state 6
+    MOUNT           shift and go to state 7
+    UNMOUNT         shift and go to state 8
+    MKFS            shift and go to state 9
+    LOGIN           shift and go to state 10
+    LOGOUT          shift and go to state 11
+    MKGRP           shift and go to state 12
+    RMGRP           shift and go to state 13
+    MKUSR           shift and go to state 14
+    RMUSR           shift and go to state 15
+    MKFILE          shift and go to state 16
+    MKDIR           shift and go to state 17
+    PAUSE           shift and go to state 18
+    EXECUTE         shift and go to state 19
+    REP             shift and go to state 20
+    COMENTARIO      shift and go to state 21
+
+    instruccion                    shift and go to state 2
+    instrucciones                  shift and go to state 22
+    comando                        shift and go to state 3
+
+state 3
+
+    (3) instruccion -> comando . parametros
+    (4) instruccion -> comando .
+    (23) parametros -> . parametro parametros
+    (24) parametros -> . parametro
+    (25) parametro -> . argumento
+    (26) parametro -> . opcion
+    (27) argumento -> . GUION param IGUAL valor
+    (45) opcion -> . GUION R
+
+    MKDISK          reduce using rule 4 (instruccion -> comando .)
+    RMDISK          reduce using rule 4 (instruccion -> comando .)
+    FDISK           reduce using rule 4 (instruccion -> comando .)
+    MOUNT           reduce using rule 4 (instruccion -> comando .)
+    UNMOUNT         reduce using rule 4 (instruccion -> comando .)
+    MKFS            reduce using rule 4 (instruccion -> comando .)
+    LOGIN           reduce using rule 4 (instruccion -> comando .)
+    LOGOUT          reduce using rule 4 (instruccion -> comando .)
+    MKGRP           reduce using rule 4 (instruccion -> comando .)
+    RMGRP           reduce using rule 4 (instruccion -> comando .)
+    MKUSR           reduce using rule 4 (instruccion -> comando .)
+    RMUSR           reduce using rule 4 (instruccion -> comando .)
+    MKFILE          reduce using rule 4 (instruccion -> comando .)
+    MKDIR           reduce using rule 4 (instruccion -> comando .)
+    PAUSE           reduce using rule 4 (instruccion -> comando .)
+    EXECUTE         reduce using rule 4 (instruccion -> comando .)
+    REP             reduce using rule 4 (instruccion -> comando .)
+    COMENTARIO      reduce using rule 4 (instruccion -> comando .)
+    $end            reduce using rule 4 (instruccion -> comando .)
+    GUION           shift and go to state 27
+
+    parametros                     shift and go to state 23
+    parametro                      shift and go to state 24
+    argumento                      shift and go to state 25
+    opcion                         shift and go to state 26
+
+state 4
+
+    (5) comando -> MKDISK .
+
+    GUION           reduce using rule 5 (comando -> MKDISK .)
+    MKDISK          reduce using rule 5 (comando -> MKDISK .)
+    RMDISK          reduce using rule 5 (comando -> MKDISK .)
+    FDISK           reduce using rule 5 (comando -> MKDISK .)
+    MOUNT           reduce using rule 5 (comando -> MKDISK .)
+    UNMOUNT         reduce using rule 5 (comando -> MKDISK .)
+    MKFS            reduce using rule 5 (comando -> MKDISK .)
+    LOGIN           reduce using rule 5 (comando -> MKDISK .)
+    LOGOUT          reduce using rule 5 (comando -> MKDISK .)
+    MKGRP           reduce using rule 5 (comando -> MKDISK .)
+    RMGRP           reduce using rule 5 (comando -> MKDISK .)
+    MKUSR           reduce using rule 5 (comando -> MKDISK .)
+    RMUSR           reduce using rule 5 (comando -> MKDISK .)
+    MKFILE          reduce using rule 5 (comando -> MKDISK .)
+    MKDIR           reduce using rule 5 (comando -> MKDISK .)
+    PAUSE           reduce using rule 5 (comando -> MKDISK .)
+    EXECUTE         reduce using rule 5 (comando -> MKDISK .)
+    REP             reduce using rule 5 (comando -> MKDISK .)
+    COMENTARIO      reduce using rule 5 (comando -> MKDISK .)
+    $end            reduce using rule 5 (comando -> MKDISK .)
+
+
+state 5
+
+    (6) comando -> RMDISK .
+
+    GUION           reduce using rule 6 (comando -> RMDISK .)
+    MKDISK          reduce using rule 6 (comando -> RMDISK .)
+    RMDISK          reduce using rule 6 (comando -> RMDISK .)
+    FDISK           reduce using rule 6 (comando -> RMDISK .)
+    MOUNT           reduce using rule 6 (comando -> RMDISK .)
+    UNMOUNT         reduce using rule 6 (comando -> RMDISK .)
+    MKFS            reduce using rule 6 (comando -> RMDISK .)
+    LOGIN           reduce using rule 6 (comando -> RMDISK .)
+    LOGOUT          reduce using rule 6 (comando -> RMDISK .)
+    MKGRP           reduce using rule 6 (comando -> RMDISK .)
+    RMGRP           reduce using rule 6 (comando -> RMDISK .)
+    MKUSR           reduce using rule 6 (comando -> RMDISK .)
+    RMUSR           reduce using rule 6 (comando -> RMDISK .)
+    MKFILE          reduce using rule 6 (comando -> RMDISK .)
+    MKDIR           reduce using rule 6 (comando -> RMDISK .)
+    PAUSE           reduce using rule 6 (comando -> RMDISK .)
+    EXECUTE         reduce using rule 6 (comando -> RMDISK .)
+    REP             reduce using rule 6 (comando -> RMDISK .)
+    COMENTARIO      reduce using rule 6 (comando -> RMDISK .)
+    $end            reduce using rule 6 (comando -> RMDISK .)
+
+
+state 6
+
+    (7) comando -> FDISK .
+
+    GUION           reduce using rule 7 (comando -> FDISK .)
+    MKDISK          reduce using rule 7 (comando -> FDISK .)
+    RMDISK          reduce using rule 7 (comando -> FDISK .)
+    FDISK           reduce using rule 7 (comando -> FDISK .)
+    MOUNT           reduce using rule 7 (comando -> FDISK .)
+    UNMOUNT         reduce using rule 7 (comando -> FDISK .)
+    MKFS            reduce using rule 7 (comando -> FDISK .)
+    LOGIN           reduce using rule 7 (comando -> FDISK .)
+    LOGOUT          reduce using rule 7 (comando -> FDISK .)
+    MKGRP           reduce using rule 7 (comando -> FDISK .)
+    RMGRP           reduce using rule 7 (comando -> FDISK .)
+    MKUSR           reduce using rule 7 (comando -> FDISK .)
+    RMUSR           reduce using rule 7 (comando -> FDISK .)
+    MKFILE          reduce using rule 7 (comando -> FDISK .)
+    MKDIR           reduce using rule 7 (comando -> FDISK .)
+    PAUSE           reduce using rule 7 (comando -> FDISK .)
+    EXECUTE         reduce using rule 7 (comando -> FDISK .)
+    REP             reduce using rule 7 (comando -> FDISK .)
+    COMENTARIO      reduce using rule 7 (comando -> FDISK .)
+    $end            reduce using rule 7 (comando -> FDISK .)
+
+
+state 7
+
+    (8) comando -> MOUNT .
+
+    GUION           reduce using rule 8 (comando -> MOUNT .)
+    MKDISK          reduce using rule 8 (comando -> MOUNT .)
+    RMDISK          reduce using rule 8 (comando -> MOUNT .)
+    FDISK           reduce using rule 8 (comando -> MOUNT .)
+    MOUNT           reduce using rule 8 (comando -> MOUNT .)
+    UNMOUNT         reduce using rule 8 (comando -> MOUNT .)
+    MKFS            reduce using rule 8 (comando -> MOUNT .)
+    LOGIN           reduce using rule 8 (comando -> MOUNT .)
+    LOGOUT          reduce using rule 8 (comando -> MOUNT .)
+    MKGRP           reduce using rule 8 (comando -> MOUNT .)
+    RMGRP           reduce using rule 8 (comando -> MOUNT .)
+    MKUSR           reduce using rule 8 (comando -> MOUNT .)
+    RMUSR           reduce using rule 8 (comando -> MOUNT .)
+    MKFILE          reduce using rule 8 (comando -> MOUNT .)
+    MKDIR           reduce using rule 8 (comando -> MOUNT .)
+    PAUSE           reduce using rule 8 (comando -> MOUNT .)
+    EXECUTE         reduce using rule 8 (comando -> MOUNT .)
+    REP             reduce using rule 8 (comando -> MOUNT .)
+    COMENTARIO      reduce using rule 8 (comando -> MOUNT .)
+    $end            reduce using rule 8 (comando -> MOUNT .)
+
+
+state 8
+
+    (9) comando -> UNMOUNT .
+
+    GUION           reduce using rule 9 (comando -> UNMOUNT .)
+    MKDISK          reduce using rule 9 (comando -> UNMOUNT .)
+    RMDISK          reduce using rule 9 (comando -> UNMOUNT .)
+    FDISK           reduce using rule 9 (comando -> UNMOUNT .)
+    MOUNT           reduce using rule 9 (comando -> UNMOUNT .)
+    UNMOUNT         reduce using rule 9 (comando -> UNMOUNT .)
+    MKFS            reduce using rule 9 (comando -> UNMOUNT .)
+    LOGIN           reduce using rule 9 (comando -> UNMOUNT .)
+    LOGOUT          reduce using rule 9 (comando -> UNMOUNT .)
+    MKGRP           reduce using rule 9 (comando -> UNMOUNT .)
+    RMGRP           reduce using rule 9 (comando -> UNMOUNT .)
+    MKUSR           reduce using rule 9 (comando -> UNMOUNT .)
+    RMUSR           reduce using rule 9 (comando -> UNMOUNT .)
+    MKFILE          reduce using rule 9 (comando -> UNMOUNT .)
+    MKDIR           reduce using rule 9 (comando -> UNMOUNT .)
+    PAUSE           reduce using rule 9 (comando -> UNMOUNT .)
+    EXECUTE         reduce using rule 9 (comando -> UNMOUNT .)
+    REP             reduce using rule 9 (comando -> UNMOUNT .)
+    COMENTARIO      reduce using rule 9 (comando -> UNMOUNT .)
+    $end            reduce using rule 9 (comando -> UNMOUNT .)
+
+
+state 9
+
+    (10) comando -> MKFS .
+
+    GUION           reduce using rule 10 (comando -> MKFS .)
+    MKDISK          reduce using rule 10 (comando -> MKFS .)
+    RMDISK          reduce using rule 10 (comando -> MKFS .)
+    FDISK           reduce using rule 10 (comando -> MKFS .)
+    MOUNT           reduce using rule 10 (comando -> MKFS .)
+    UNMOUNT         reduce using rule 10 (comando -> MKFS .)
+    MKFS            reduce using rule 10 (comando -> MKFS .)
+    LOGIN           reduce using rule 10 (comando -> MKFS .)
+    LOGOUT          reduce using rule 10 (comando -> MKFS .)
+    MKGRP           reduce using rule 10 (comando -> MKFS .)
+    RMGRP           reduce using rule 10 (comando -> MKFS .)
+    MKUSR           reduce using rule 10 (comando -> MKFS .)
+    RMUSR           reduce using rule 10 (comando -> MKFS .)
+    MKFILE          reduce using rule 10 (comando -> MKFS .)
+    MKDIR           reduce using rule 10 (comando -> MKFS .)
+    PAUSE           reduce using rule 10 (comando -> MKFS .)
+    EXECUTE         reduce using rule 10 (comando -> MKFS .)
+    REP             reduce using rule 10 (comando -> MKFS .)
+    COMENTARIO      reduce using rule 10 (comando -> MKFS .)
+    $end            reduce using rule 10 (comando -> MKFS .)
+
+
+state 10
+
+    (11) comando -> LOGIN .
+
+    GUION           reduce using rule 11 (comando -> LOGIN .)
+    MKDISK          reduce using rule 11 (comando -> LOGIN .)
+    RMDISK          reduce using rule 11 (comando -> LOGIN .)
+    FDISK           reduce using rule 11 (comando -> LOGIN .)
+    MOUNT           reduce using rule 11 (comando -> LOGIN .)
+    UNMOUNT         reduce using rule 11 (comando -> LOGIN .)
+    MKFS            reduce using rule 11 (comando -> LOGIN .)
+    LOGIN           reduce using rule 11 (comando -> LOGIN .)
+    LOGOUT          reduce using rule 11 (comando -> LOGIN .)
+    MKGRP           reduce using rule 11 (comando -> LOGIN .)
+    RMGRP           reduce using rule 11 (comando -> LOGIN .)
+    MKUSR           reduce using rule 11 (comando -> LOGIN .)
+    RMUSR           reduce using rule 11 (comando -> LOGIN .)
+    MKFILE          reduce using rule 11 (comando -> LOGIN .)
+    MKDIR           reduce using rule 11 (comando -> LOGIN .)
+    PAUSE           reduce using rule 11 (comando -> LOGIN .)
+    EXECUTE         reduce using rule 11 (comando -> LOGIN .)
+    REP             reduce using rule 11 (comando -> LOGIN .)
+    COMENTARIO      reduce using rule 11 (comando -> LOGIN .)
+    $end            reduce using rule 11 (comando -> LOGIN .)
+
+
+state 11
+
+    (12) comando -> LOGOUT .
+
+    GUION           reduce using rule 12 (comando -> LOGOUT .)
+    MKDISK          reduce using rule 12 (comando -> LOGOUT .)
+    RMDISK          reduce using rule 12 (comando -> LOGOUT .)
+    FDISK           reduce using rule 12 (comando -> LOGOUT .)
+    MOUNT           reduce using rule 12 (comando -> LOGOUT .)
+    UNMOUNT         reduce using rule 12 (comando -> LOGOUT .)
+    MKFS            reduce using rule 12 (comando -> LOGOUT .)
+    LOGIN           reduce using rule 12 (comando -> LOGOUT .)
+    LOGOUT          reduce using rule 12 (comando -> LOGOUT .)
+    MKGRP           reduce using rule 12 (comando -> LOGOUT .)
+    RMGRP           reduce using rule 12 (comando -> LOGOUT .)
+    MKUSR           reduce using rule 12 (comando -> LOGOUT .)
+    RMUSR           reduce using rule 12 (comando -> LOGOUT .)
+    MKFILE          reduce using rule 12 (comando -> LOGOUT .)
+    MKDIR           reduce using rule 12 (comando -> LOGOUT .)
+    PAUSE           reduce using rule 12 (comando -> LOGOUT .)
+    EXECUTE         reduce using rule 12 (comando -> LOGOUT .)
+    REP             reduce using rule 12 (comando -> LOGOUT .)
+    COMENTARIO      reduce using rule 12 (comando -> LOGOUT .)
+    $end            reduce using rule 12 (comando -> LOGOUT .)
+
+
+state 12
+
+    (13) comando -> MKGRP .
+
+    GUION           reduce using rule 13 (comando -> MKGRP .)
+    MKDISK          reduce using rule 13 (comando -> MKGRP .)
+    RMDISK          reduce using rule 13 (comando -> MKGRP .)
+    FDISK           reduce using rule 13 (comando -> MKGRP .)
+    MOUNT           reduce using rule 13 (comando -> MKGRP .)
+    UNMOUNT         reduce using rule 13 (comando -> MKGRP .)
+    MKFS            reduce using rule 13 (comando -> MKGRP .)
+    LOGIN           reduce using rule 13 (comando -> MKGRP .)
+    LOGOUT          reduce using rule 13 (comando -> MKGRP .)
+    MKGRP           reduce using rule 13 (comando -> MKGRP .)
+    RMGRP           reduce using rule 13 (comando -> MKGRP .)
+    MKUSR           reduce using rule 13 (comando -> MKGRP .)
+    RMUSR           reduce using rule 13 (comando -> MKGRP .)
+    MKFILE          reduce using rule 13 (comando -> MKGRP .)
+    MKDIR           reduce using rule 13 (comando -> MKGRP .)
+    PAUSE           reduce using rule 13 (comando -> MKGRP .)
+    EXECUTE         reduce using rule 13 (comando -> MKGRP .)
+    REP             reduce using rule 13 (comando -> MKGRP .)
+    COMENTARIO      reduce using rule 13 (comando -> MKGRP .)
+    $end            reduce using rule 13 (comando -> MKGRP .)
+
+
+state 13
+
+    (14) comando -> RMGRP .
+
+    GUION           reduce using rule 14 (comando -> RMGRP .)
+    MKDISK          reduce using rule 14 (comando -> RMGRP .)
+    RMDISK          reduce using rule 14 (comando -> RMGRP .)
+    FDISK           reduce using rule 14 (comando -> RMGRP .)
+    MOUNT           reduce using rule 14 (comando -> RMGRP .)
+    UNMOUNT         reduce using rule 14 (comando -> RMGRP .)
+    MKFS            reduce using rule 14 (comando -> RMGRP .)
+    LOGIN           reduce using rule 14 (comando -> RMGRP .)
+    LOGOUT          reduce using rule 14 (comando -> RMGRP .)
+    MKGRP           reduce using rule 14 (comando -> RMGRP .)
+    RMGRP           reduce using rule 14 (comando -> RMGRP .)
+    MKUSR           reduce using rule 14 (comando -> RMGRP .)
+    RMUSR           reduce using rule 14 (comando -> RMGRP .)
+    MKFILE          reduce using rule 14 (comando -> RMGRP .)
+    MKDIR           reduce using rule 14 (comando -> RMGRP .)
+    PAUSE           reduce using rule 14 (comando -> RMGRP .)
+    EXECUTE         reduce using rule 14 (comando -> RMGRP .)
+    REP             reduce using rule 14 (comando -> RMGRP .)
+    COMENTARIO      reduce using rule 14 (comando -> RMGRP .)
+    $end            reduce using rule 14 (comando -> RMGRP .)
+
+
+state 14
+
+    (15) comando -> MKUSR .
+
+    GUION           reduce using rule 15 (comando -> MKUSR .)
+    MKDISK          reduce using rule 15 (comando -> MKUSR .)
+    RMDISK          reduce using rule 15 (comando -> MKUSR .)
+    FDISK           reduce using rule 15 (comando -> MKUSR .)
+    MOUNT           reduce using rule 15 (comando -> MKUSR .)
+    UNMOUNT         reduce using rule 15 (comando -> MKUSR .)
+    MKFS            reduce using rule 15 (comando -> MKUSR .)
+    LOGIN           reduce using rule 15 (comando -> MKUSR .)
+    LOGOUT          reduce using rule 15 (comando -> MKUSR .)
+    MKGRP           reduce using rule 15 (comando -> MKUSR .)
+    RMGRP           reduce using rule 15 (comando -> MKUSR .)
+    MKUSR           reduce using rule 15 (comando -> MKUSR .)
+    RMUSR           reduce using rule 15 (comando -> MKUSR .)
+    MKFILE          reduce using rule 15 (comando -> MKUSR .)
+    MKDIR           reduce using rule 15 (comando -> MKUSR .)
+    PAUSE           reduce using rule 15 (comando -> MKUSR .)
+    EXECUTE         reduce using rule 15 (comando -> MKUSR .)
+    REP             reduce using rule 15 (comando -> MKUSR .)
+    COMENTARIO      reduce using rule 15 (comando -> MKUSR .)
+    $end            reduce using rule 15 (comando -> MKUSR .)
+
+
+state 15
+
+    (16) comando -> RMUSR .
+
+    GUION           reduce using rule 16 (comando -> RMUSR .)
+    MKDISK          reduce using rule 16 (comando -> RMUSR .)
+    RMDISK          reduce using rule 16 (comando -> RMUSR .)
+    FDISK           reduce using rule 16 (comando -> RMUSR .)
+    MOUNT           reduce using rule 16 (comando -> RMUSR .)
+    UNMOUNT         reduce using rule 16 (comando -> RMUSR .)
+    MKFS            reduce using rule 16 (comando -> RMUSR .)
+    LOGIN           reduce using rule 16 (comando -> RMUSR .)
+    LOGOUT          reduce using rule 16 (comando -> RMUSR .)
+    MKGRP           reduce using rule 16 (comando -> RMUSR .)
+    RMGRP           reduce using rule 16 (comando -> RMUSR .)
+    MKUSR           reduce using rule 16 (comando -> RMUSR .)
+    RMUSR           reduce using rule 16 (comando -> RMUSR .)
+    MKFILE          reduce using rule 16 (comando -> RMUSR .)
+    MKDIR           reduce using rule 16 (comando -> RMUSR .)
+    PAUSE           reduce using rule 16 (comando -> RMUSR .)
+    EXECUTE         reduce using rule 16 (comando -> RMUSR .)
+    REP             reduce using rule 16 (comando -> RMUSR .)
+    COMENTARIO      reduce using rule 16 (comando -> RMUSR .)
+    $end            reduce using rule 16 (comando -> RMUSR .)
+
+
+state 16
+
+    (17) comando -> MKFILE .
+
+    GUION           reduce using rule 17 (comando -> MKFILE .)
+    MKDISK          reduce using rule 17 (comando -> MKFILE .)
+    RMDISK          reduce using rule 17 (comando -> MKFILE .)
+    FDISK           reduce using rule 17 (comando -> MKFILE .)
+    MOUNT           reduce using rule 17 (comando -> MKFILE .)
+    UNMOUNT         reduce using rule 17 (comando -> MKFILE .)
+    MKFS            reduce using rule 17 (comando -> MKFILE .)
+    LOGIN           reduce using rule 17 (comando -> MKFILE .)
+    LOGOUT          reduce using rule 17 (comando -> MKFILE .)
+    MKGRP           reduce using rule 17 (comando -> MKFILE .)
+    RMGRP           reduce using rule 17 (comando -> MKFILE .)
+    MKUSR           reduce using rule 17 (comando -> MKFILE .)
+    RMUSR           reduce using rule 17 (comando -> MKFILE .)
+    MKFILE          reduce using rule 17 (comando -> MKFILE .)
+    MKDIR           reduce using rule 17 (comando -> MKFILE .)
+    PAUSE           reduce using rule 17 (comando -> MKFILE .)
+    EXECUTE         reduce using rule 17 (comando -> MKFILE .)
+    REP             reduce using rule 17 (comando -> MKFILE .)
+    COMENTARIO      reduce using rule 17 (comando -> MKFILE .)
+    $end            reduce using rule 17 (comando -> MKFILE .)
+
+
+state 17
+
+    (18) comando -> MKDIR .
+
+    GUION           reduce using rule 18 (comando -> MKDIR .)
+    MKDISK          reduce using rule 18 (comando -> MKDIR .)
+    RMDISK          reduce using rule 18 (comando -> MKDIR .)
+    FDISK           reduce using rule 18 (comando -> MKDIR .)
+    MOUNT           reduce using rule 18 (comando -> MKDIR .)
+    UNMOUNT         reduce using rule 18 (comando -> MKDIR .)
+    MKFS            reduce using rule 18 (comando -> MKDIR .)
+    LOGIN           reduce using rule 18 (comando -> MKDIR .)
+    LOGOUT          reduce using rule 18 (comando -> MKDIR .)
+    MKGRP           reduce using rule 18 (comando -> MKDIR .)
+    RMGRP           reduce using rule 18 (comando -> MKDIR .)
+    MKUSR           reduce using rule 18 (comando -> MKDIR .)
+    RMUSR           reduce using rule 18 (comando -> MKDIR .)
+    MKFILE          reduce using rule 18 (comando -> MKDIR .)
+    MKDIR           reduce using rule 18 (comando -> MKDIR .)
+    PAUSE           reduce using rule 18 (comando -> MKDIR .)
+    EXECUTE         reduce using rule 18 (comando -> MKDIR .)
+    REP             reduce using rule 18 (comando -> MKDIR .)
+    COMENTARIO      reduce using rule 18 (comando -> MKDIR .)
+    $end            reduce using rule 18 (comando -> MKDIR .)
+
+
+state 18
+
+    (19) comando -> PAUSE .
+
+    GUION           reduce using rule 19 (comando -> PAUSE .)
+    MKDISK          reduce using rule 19 (comando -> PAUSE .)
+    RMDISK          reduce using rule 19 (comando -> PAUSE .)
+    FDISK           reduce using rule 19 (comando -> PAUSE .)
+    MOUNT           reduce using rule 19 (comando -> PAUSE .)
+    UNMOUNT         reduce using rule 19 (comando -> PAUSE .)
+    MKFS            reduce using rule 19 (comando -> PAUSE .)
+    LOGIN           reduce using rule 19 (comando -> PAUSE .)
+    LOGOUT          reduce using rule 19 (comando -> PAUSE .)
+    MKGRP           reduce using rule 19 (comando -> PAUSE .)
+    RMGRP           reduce using rule 19 (comando -> PAUSE .)
+    MKUSR           reduce using rule 19 (comando -> PAUSE .)
+    RMUSR           reduce using rule 19 (comando -> PAUSE .)
+    MKFILE          reduce using rule 19 (comando -> PAUSE .)
+    MKDIR           reduce using rule 19 (comando -> PAUSE .)
+    PAUSE           reduce using rule 19 (comando -> PAUSE .)
+    EXECUTE         reduce using rule 19 (comando -> PAUSE .)
+    REP             reduce using rule 19 (comando -> PAUSE .)
+    COMENTARIO      reduce using rule 19 (comando -> PAUSE .)
+    $end            reduce using rule 19 (comando -> PAUSE .)
+
+
+state 19
+
+    (20) comando -> EXECUTE .
+
+    GUION           reduce using rule 20 (comando -> EXECUTE .)
+    MKDISK          reduce using rule 20 (comando -> EXECUTE .)
+    RMDISK          reduce using rule 20 (comando -> EXECUTE .)
+    FDISK           reduce using rule 20 (comando -> EXECUTE .)
+    MOUNT           reduce using rule 20 (comando -> EXECUTE .)
+    UNMOUNT         reduce using rule 20 (comando -> EXECUTE .)
+    MKFS            reduce using rule 20 (comando -> EXECUTE .)
+    LOGIN           reduce using rule 20 (comando -> EXECUTE .)
+    LOGOUT          reduce using rule 20 (comando -> EXECUTE .)
+    MKGRP           reduce using rule 20 (comando -> EXECUTE .)
+    RMGRP           reduce using rule 20 (comando -> EXECUTE .)
+    MKUSR           reduce using rule 20 (comando -> EXECUTE .)
+    RMUSR           reduce using rule 20 (comando -> EXECUTE .)
+    MKFILE          reduce using rule 20 (comando -> EXECUTE .)
+    MKDIR           reduce using rule 20 (comando -> EXECUTE .)
+    PAUSE           reduce using rule 20 (comando -> EXECUTE .)
+    EXECUTE         reduce using rule 20 (comando -> EXECUTE .)
+    REP             reduce using rule 20 (comando -> EXECUTE .)
+    COMENTARIO      reduce using rule 20 (comando -> EXECUTE .)
+    $end            reduce using rule 20 (comando -> EXECUTE .)
+
+
+state 20
+
+    (21) comando -> REP .
+
+    GUION           reduce using rule 21 (comando -> REP .)
+    MKDISK          reduce using rule 21 (comando -> REP .)
+    RMDISK          reduce using rule 21 (comando -> REP .)
+    FDISK           reduce using rule 21 (comando -> REP .)
+    MOUNT           reduce using rule 21 (comando -> REP .)
+    UNMOUNT         reduce using rule 21 (comando -> REP .)
+    MKFS            reduce using rule 21 (comando -> REP .)
+    LOGIN           reduce using rule 21 (comando -> REP .)
+    LOGOUT          reduce using rule 21 (comando -> REP .)
+    MKGRP           reduce using rule 21 (comando -> REP .)
+    RMGRP           reduce using rule 21 (comando -> REP .)
+    MKUSR           reduce using rule 21 (comando -> REP .)
+    RMUSR           reduce using rule 21 (comando -> REP .)
+    MKFILE          reduce using rule 21 (comando -> REP .)
+    MKDIR           reduce using rule 21 (comando -> REP .)
+    PAUSE           reduce using rule 21 (comando -> REP .)
+    EXECUTE         reduce using rule 21 (comando -> REP .)
+    REP             reduce using rule 21 (comando -> REP .)
+    COMENTARIO      reduce using rule 21 (comando -> REP .)
+    $end            reduce using rule 21 (comando -> REP .)
+
+
+state 21
+
+    (22) comando -> COMENTARIO .
+
+    GUION           reduce using rule 22 (comando -> COMENTARIO .)
+    MKDISK          reduce using rule 22 (comando -> COMENTARIO .)
+    RMDISK          reduce using rule 22 (comando -> COMENTARIO .)
+    FDISK           reduce using rule 22 (comando -> COMENTARIO .)
+    MOUNT           reduce using rule 22 (comando -> COMENTARIO .)
+    UNMOUNT         reduce using rule 22 (comando -> COMENTARIO .)
+    MKFS            reduce using rule 22 (comando -> COMENTARIO .)
+    LOGIN           reduce using rule 22 (comando -> COMENTARIO .)
+    LOGOUT          reduce using rule 22 (comando -> COMENTARIO .)
+    MKGRP           reduce using rule 22 (comando -> COMENTARIO .)
+    RMGRP           reduce using rule 22 (comando -> COMENTARIO .)
+    MKUSR           reduce using rule 22 (comando -> COMENTARIO .)
+    RMUSR           reduce using rule 22 (comando -> COMENTARIO .)
+    MKFILE          reduce using rule 22 (comando -> COMENTARIO .)
+    MKDIR           reduce using rule 22 (comando -> COMENTARIO .)
+    PAUSE           reduce using rule 22 (comando -> COMENTARIO .)
+    EXECUTE         reduce using rule 22 (comando -> COMENTARIO .)
+    REP             reduce using rule 22 (comando -> COMENTARIO .)
+    COMENTARIO      reduce using rule 22 (comando -> COMENTARIO .)
+    $end            reduce using rule 22 (comando -> COMENTARIO .)
+
+
+state 22
+
+    (1) instrucciones -> instruccion instrucciones .
+
+    $end            reduce using rule 1 (instrucciones -> instruccion instrucciones .)
+
+
+state 23
+
+    (3) instruccion -> comando parametros .
+
+    MKDISK          reduce using rule 3 (instruccion -> comando parametros .)
+    RMDISK          reduce using rule 3 (instruccion -> comando parametros .)
+    FDISK           reduce using rule 3 (instruccion -> comando parametros .)
+    MOUNT           reduce using rule 3 (instruccion -> comando parametros .)
+    UNMOUNT         reduce using rule 3 (instruccion -> comando parametros .)
+    MKFS            reduce using rule 3 (instruccion -> comando parametros .)
+    LOGIN           reduce using rule 3 (instruccion -> comando parametros .)
+    LOGOUT          reduce using rule 3 (instruccion -> comando parametros .)
+    MKGRP           reduce using rule 3 (instruccion -> comando parametros .)
+    RMGRP           reduce using rule 3 (instruccion -> comando parametros .)
+    MKUSR           reduce using rule 3 (instruccion -> comando parametros .)
+    RMUSR           reduce using rule 3 (instruccion -> comando parametros .)
+    MKFILE          reduce using rule 3 (instruccion -> comando parametros .)
+    MKDIR           reduce using rule 3 (instruccion -> comando parametros .)
+    PAUSE           reduce using rule 3 (instruccion -> comando parametros .)
+    EXECUTE         reduce using rule 3 (instruccion -> comando parametros .)
+    REP             reduce using rule 3 (instruccion -> comando parametros .)
+    COMENTARIO      reduce using rule 3 (instruccion -> comando parametros .)
+    $end            reduce using rule 3 (instruccion -> comando parametros .)
+
+
+state 24
+
+    (23) parametros -> parametro . parametros
+    (24) parametros -> parametro .
+    (23) parametros -> . parametro parametros
+    (24) parametros -> . parametro
+    (25) parametro -> . argumento
+    (26) parametro -> . opcion
+    (27) argumento -> . GUION param IGUAL valor
+    (45) opcion -> . GUION R
+
+    MKDISK          reduce using rule 24 (parametros -> parametro .)
+    RMDISK          reduce using rule 24 (parametros -> parametro .)
+    FDISK           reduce using rule 24 (parametros -> parametro .)
+    MOUNT           reduce using rule 24 (parametros -> parametro .)
+    UNMOUNT         reduce using rule 24 (parametros -> parametro .)
+    MKFS            reduce using rule 24 (parametros -> parametro .)
+    LOGIN           reduce using rule 24 (parametros -> parametro .)
+    LOGOUT          reduce using rule 24 (parametros -> parametro .)
+    MKGRP           reduce using rule 24 (parametros -> parametro .)
+    RMGRP           reduce using rule 24 (parametros -> parametro .)
+    MKUSR           reduce using rule 24 (parametros -> parametro .)
+    RMUSR           reduce using rule 24 (parametros -> parametro .)
+    MKFILE          reduce using rule 24 (parametros -> parametro .)
+    MKDIR           reduce using rule 24 (parametros -> parametro .)
+    PAUSE           reduce using rule 24 (parametros -> parametro .)
+    EXECUTE         reduce using rule 24 (parametros -> parametro .)
+    REP             reduce using rule 24 (parametros -> parametro .)
+    COMENTARIO      reduce using rule 24 (parametros -> parametro .)
+    $end            reduce using rule 24 (parametros -> parametro .)
+    GUION           shift and go to state 27
+
+    parametro                      shift and go to state 24
+    parametros                     shift and go to state 28
+    argumento                      shift and go to state 25
+    opcion                         shift and go to state 26
+
+state 25
+
+    (25) parametro -> argumento .
+
+    GUION           reduce using rule 25 (parametro -> argumento .)
+    MKDISK          reduce using rule 25 (parametro -> argumento .)
+    RMDISK          reduce using rule 25 (parametro -> argumento .)
+    FDISK           reduce using rule 25 (parametro -> argumento .)
+    MOUNT           reduce using rule 25 (parametro -> argumento .)
+    UNMOUNT         reduce using rule 25 (parametro -> argumento .)
+    MKFS            reduce using rule 25 (parametro -> argumento .)
+    LOGIN           reduce using rule 25 (parametro -> argumento .)
+    LOGOUT          reduce using rule 25 (parametro -> argumento .)
+    MKGRP           reduce using rule 25 (parametro -> argumento .)
+    RMGRP           reduce using rule 25 (parametro -> argumento .)
+    MKUSR           reduce using rule 25 (parametro -> argumento .)
+    RMUSR           reduce using rule 25 (parametro -> argumento .)
+    MKFILE          reduce using rule 25 (parametro -> argumento .)
+    MKDIR           reduce using rule 25 (parametro -> argumento .)
+    PAUSE           reduce using rule 25 (parametro -> argumento .)
+    EXECUTE         reduce using rule 25 (parametro -> argumento .)
+    REP             reduce using rule 25 (parametro -> argumento .)
+    COMENTARIO      reduce using rule 25 (parametro -> argumento .)
+    $end            reduce using rule 25 (parametro -> argumento .)
+
+
+state 26
+
+    (26) parametro -> opcion .
+
+    GUION           reduce using rule 26 (parametro -> opcion .)
+    MKDISK          reduce using rule 26 (parametro -> opcion .)
+    RMDISK          reduce using rule 26 (parametro -> opcion .)
+    FDISK           reduce using rule 26 (parametro -> opcion .)
+    MOUNT           reduce using rule 26 (parametro -> opcion .)
+    UNMOUNT         reduce using rule 26 (parametro -> opcion .)
+    MKFS            reduce using rule 26 (parametro -> opcion .)
+    LOGIN           reduce using rule 26 (parametro -> opcion .)
+    LOGOUT          reduce using rule 26 (parametro -> opcion .)
+    MKGRP           reduce using rule 26 (parametro -> opcion .)
+    RMGRP           reduce using rule 26 (parametro -> opcion .)
+    MKUSR           reduce using rule 26 (parametro -> opcion .)
+    RMUSR           reduce using rule 26 (parametro -> opcion .)
+    MKFILE          reduce using rule 26 (parametro -> opcion .)
+    MKDIR           reduce using rule 26 (parametro -> opcion .)
+    PAUSE           reduce using rule 26 (parametro -> opcion .)
+    EXECUTE         reduce using rule 26 (parametro -> opcion .)
+    REP             reduce using rule 26 (parametro -> opcion .)
+    COMENTARIO      reduce using rule 26 (parametro -> opcion .)
+    $end            reduce using rule 26 (parametro -> opcion .)
+
+
+state 27
+
+    (27) argumento -> GUION . param IGUAL valor
+    (45) opcion -> GUION . R
+    (28) param -> . SIZE
+    (29) param -> . PATH
+    (30) param -> . FIT
+    (31) param -> . UNIT
+    (32) param -> . NAME
+    (33) param -> . TYPE
+    (34) param -> . ID
+    (35) param -> . USER
+    (36) param -> . PASS
+    (37) param -> . GRP
+    (38) param -> . CONT
+    (39) param -> . RUTA
+
+    R               shift and go to state 30
+    SIZE            shift and go to state 31
+    PATH            shift and go to state 32
+    FIT             shift and go to state 33
+    UNIT            shift and go to state 34
+    NAME            shift and go to state 35
+    TYPE            shift and go to state 36
+    ID              shift and go to state 37
+    USER            shift and go to state 38
+    PASS            shift and go to state 39
+    GRP             shift and go to state 40
+    CONT            shift and go to state 41
+    RUTA            shift and go to state 42
+
+    param                          shift and go to state 29
+
+state 28
+
+    (23) parametros -> parametro parametros .
+
+    MKDISK          reduce using rule 23 (parametros -> parametro parametros .)
+    RMDISK          reduce using rule 23 (parametros -> parametro parametros .)
+    FDISK           reduce using rule 23 (parametros -> parametro parametros .)
+    MOUNT           reduce using rule 23 (parametros -> parametro parametros .)
+    UNMOUNT         reduce using rule 23 (parametros -> parametro parametros .)
+    MKFS            reduce using rule 23 (parametros -> parametro parametros .)
+    LOGIN           reduce using rule 23 (parametros -> parametro parametros .)
+    LOGOUT          reduce using rule 23 (parametros -> parametro parametros .)
+    MKGRP           reduce using rule 23 (parametros -> parametro parametros .)
+    RMGRP           reduce using rule 23 (parametros -> parametro parametros .)
+    MKUSR           reduce using rule 23 (parametros -> parametro parametros .)
+    RMUSR           reduce using rule 23 (parametros -> parametro parametros .)
+    MKFILE          reduce using rule 23 (parametros -> parametro parametros .)
+    MKDIR           reduce using rule 23 (parametros -> parametro parametros .)
+    PAUSE           reduce using rule 23 (parametros -> parametro parametros .)
+    EXECUTE         reduce using rule 23 (parametros -> parametro parametros .)
+    REP             reduce using rule 23 (parametros -> parametro parametros .)
+    COMENTARIO      reduce using rule 23 (parametros -> parametro parametros .)
+    $end            reduce using rule 23 (parametros -> parametro parametros .)
+
+
+state 29
+
+    (27) argumento -> GUION param . IGUAL valor
+
+    IGUAL           shift and go to state 43
+
+
+state 30
+
+    (45) opcion -> GUION R .
+
+    GUION           reduce using rule 45 (opcion -> GUION R .)
+    MKDISK          reduce using rule 45 (opcion -> GUION R .)
+    RMDISK          reduce using rule 45 (opcion -> GUION R .)
+    FDISK           reduce using rule 45 (opcion -> GUION R .)
+    MOUNT           reduce using rule 45 (opcion -> GUION R .)
+    UNMOUNT         reduce using rule 45 (opcion -> GUION R .)
+    MKFS            reduce using rule 45 (opcion -> GUION R .)
+    LOGIN           reduce using rule 45 (opcion -> GUION R .)
+    LOGOUT          reduce using rule 45 (opcion -> GUION R .)
+    MKGRP           reduce using rule 45 (opcion -> GUION R .)
+    RMGRP           reduce using rule 45 (opcion -> GUION R .)
+    MKUSR           reduce using rule 45 (opcion -> GUION R .)
+    RMUSR           reduce using rule 45 (opcion -> GUION R .)
+    MKFILE          reduce using rule 45 (opcion -> GUION R .)
+    MKDIR           reduce using rule 45 (opcion -> GUION R .)
+    PAUSE           reduce using rule 45 (opcion -> GUION R .)
+    EXECUTE         reduce using rule 45 (opcion -> GUION R .)
+    REP             reduce using rule 45 (opcion -> GUION R .)
+    COMENTARIO      reduce using rule 45 (opcion -> GUION R .)
+    $end            reduce using rule 45 (opcion -> GUION R .)
+
+
+state 31
+
+    (28) param -> SIZE .
+
+    IGUAL           reduce using rule 28 (param -> SIZE .)
+
+
+state 32
+
+    (29) param -> PATH .
+
+    IGUAL           reduce using rule 29 (param -> PATH .)
+
+
+state 33
+
+    (30) param -> FIT .
+
+    IGUAL           reduce using rule 30 (param -> FIT .)
+
+
+state 34
+
+    (31) param -> UNIT .
+
+    IGUAL           reduce using rule 31 (param -> UNIT .)
+
+
+state 35
+
+    (32) param -> NAME .
+
+    IGUAL           reduce using rule 32 (param -> NAME .)
+
+
+state 36
+
+    (33) param -> TYPE .
+
+    IGUAL           reduce using rule 33 (param -> TYPE .)
+
+
+state 37
+
+    (34) param -> ID .
+
+    IGUAL           reduce using rule 34 (param -> ID .)
+
+
+state 38
+
+    (35) param -> USER .
+
+    IGUAL           reduce using rule 35 (param -> USER .)
+
+
+state 39
+
+    (36) param -> PASS .
+
+    IGUAL           reduce using rule 36 (param -> PASS .)
+
+
+state 40
+
+    (37) param -> GRP .
+
+    IGUAL           reduce using rule 37 (param -> GRP .)
+
+
+state 41
+
+    (38) param -> CONT .
+
+    IGUAL           reduce using rule 38 (param -> CONT .)
+
+
+state 42
+
+    (39) param -> RUTA .
+
+    IGUAL           reduce using rule 39 (param -> RUTA .)
+
+
+state 43
+
+    (27) argumento -> GUION param IGUAL . valor
+    (40) valor -> . ENTERO
+    (41) valor -> . RUTA_ARCHIVO
+    (42) valor -> . RUTA_CARPETA
+    (43) valor -> . NOMBRE_ARCHIVO
+    (44) valor -> . CADENA
+
+    ENTERO          shift and go to state 45
+    RUTA_ARCHIVO    shift and go to state 46
+    RUTA_CARPETA    shift and go to state 47
+    NOMBRE_ARCHIVO  shift and go to state 48
+    CADENA          shift and go to state 49
+
+    valor                          shift and go to state 44
+
+state 44
+
+    (27) argumento -> GUION param IGUAL valor .
+
+    GUION           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    MKDISK          reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    RMDISK          reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    FDISK           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    MOUNT           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    UNMOUNT         reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    MKFS            reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    LOGIN           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    LOGOUT          reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    MKGRP           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    RMGRP           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    MKUSR           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    RMUSR           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    MKFILE          reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    MKDIR           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    PAUSE           reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    EXECUTE         reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    REP             reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    COMENTARIO      reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+    $end            reduce using rule 27 (argumento -> GUION param IGUAL valor .)
+
+
+state 45
+
+    (40) valor -> ENTERO .
+
+    GUION           reduce using rule 40 (valor -> ENTERO .)
+    MKDISK          reduce using rule 40 (valor -> ENTERO .)
+    RMDISK          reduce using rule 40 (valor -> ENTERO .)
+    FDISK           reduce using rule 40 (valor -> ENTERO .)
+    MOUNT           reduce using rule 40 (valor -> ENTERO .)
+    UNMOUNT         reduce using rule 40 (valor -> ENTERO .)
+    MKFS            reduce using rule 40 (valor -> ENTERO .)
+    LOGIN           reduce using rule 40 (valor -> ENTERO .)
+    LOGOUT          reduce using rule 40 (valor -> ENTERO .)
+    MKGRP           reduce using rule 40 (valor -> ENTERO .)
+    RMGRP           reduce using rule 40 (valor -> ENTERO .)
+    MKUSR           reduce using rule 40 (valor -> ENTERO .)
+    RMUSR           reduce using rule 40 (valor -> ENTERO .)
+    MKFILE          reduce using rule 40 (valor -> ENTERO .)
+    MKDIR           reduce using rule 40 (valor -> ENTERO .)
+    PAUSE           reduce using rule 40 (valor -> ENTERO .)
+    EXECUTE         reduce using rule 40 (valor -> ENTERO .)
+    REP             reduce using rule 40 (valor -> ENTERO .)
+    COMENTARIO      reduce using rule 40 (valor -> ENTERO .)
+    $end            reduce using rule 40 (valor -> ENTERO .)
+
+
+state 46
+
+    (41) valor -> RUTA_ARCHIVO .
+
+    GUION           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    MKDISK          reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    RMDISK          reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    FDISK           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    MOUNT           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    UNMOUNT         reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    MKFS            reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    LOGIN           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    LOGOUT          reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    MKGRP           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    RMGRP           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    MKUSR           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    RMUSR           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    MKFILE          reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    MKDIR           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    PAUSE           reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    EXECUTE         reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    REP             reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    COMENTARIO      reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+    $end            reduce using rule 41 (valor -> RUTA_ARCHIVO .)
+
+
+state 47
+
+    (42) valor -> RUTA_CARPETA .
+
+    GUION           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    MKDISK          reduce using rule 42 (valor -> RUTA_CARPETA .)
+    RMDISK          reduce using rule 42 (valor -> RUTA_CARPETA .)
+    FDISK           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    MOUNT           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    UNMOUNT         reduce using rule 42 (valor -> RUTA_CARPETA .)
+    MKFS            reduce using rule 42 (valor -> RUTA_CARPETA .)
+    LOGIN           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    LOGOUT          reduce using rule 42 (valor -> RUTA_CARPETA .)
+    MKGRP           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    RMGRP           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    MKUSR           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    RMUSR           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    MKFILE          reduce using rule 42 (valor -> RUTA_CARPETA .)
+    MKDIR           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    PAUSE           reduce using rule 42 (valor -> RUTA_CARPETA .)
+    EXECUTE         reduce using rule 42 (valor -> RUTA_CARPETA .)
+    REP             reduce using rule 42 (valor -> RUTA_CARPETA .)
+    COMENTARIO      reduce using rule 42 (valor -> RUTA_CARPETA .)
+    $end            reduce using rule 42 (valor -> RUTA_CARPETA .)
+
+
+state 48
+
+    (43) valor -> NOMBRE_ARCHIVO .
+
+    GUION           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    MKDISK          reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    RMDISK          reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    FDISK           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    MOUNT           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    UNMOUNT         reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    MKFS            reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    LOGIN           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    LOGOUT          reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    MKGRP           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    RMGRP           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    MKUSR           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    RMUSR           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    MKFILE          reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    MKDIR           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    PAUSE           reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    EXECUTE         reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    REP             reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    COMENTARIO      reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+    $end            reduce using rule 43 (valor -> NOMBRE_ARCHIVO .)
+
+
+state 49
+
+    (44) valor -> CADENA .
+
+    GUION           reduce using rule 44 (valor -> CADENA .)
+    MKDISK          reduce using rule 44 (valor -> CADENA .)
+    RMDISK          reduce using rule 44 (valor -> CADENA .)
+    FDISK           reduce using rule 44 (valor -> CADENA .)
+    MOUNT           reduce using rule 44 (valor -> CADENA .)
+    UNMOUNT         reduce using rule 44 (valor -> CADENA .)
+    MKFS            reduce using rule 44 (valor -> CADENA .)
+    LOGIN           reduce using rule 44 (valor -> CADENA .)
+    LOGOUT          reduce using rule 44 (valor -> CADENA .)
+    MKGRP           reduce using rule 44 (valor -> CADENA .)
+    RMGRP           reduce using rule 44 (valor -> CADENA .)
+    MKUSR           reduce using rule 44 (valor -> CADENA .)
+    RMUSR           reduce using rule 44 (valor -> CADENA .)
+    MKFILE          reduce using rule 44 (valor -> CADENA .)
+    MKDIR           reduce using rule 44 (valor -> CADENA .)
+    PAUSE           reduce using rule 44 (valor -> CADENA .)
+    EXECUTE         reduce using rule 44 (valor -> CADENA .)
+    REP             reduce using rule 44 (valor -> CADENA .)
+    COMENTARIO      reduce using rule 44 (valor -> CADENA .)
+    $end            reduce using rule 44 (valor -> CADENA .)
+
