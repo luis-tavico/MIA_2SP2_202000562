@@ -38,70 +38,72 @@ def comando_activar(valor):
     #comandos de discos
     if (comando.lower() == "mkdisk"):
         script = Mkdisk()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando mkdisk..."))
-        mensajes += '<span class="text-info"> Ejecutando comando execute...</span><br>'
+        mensajes += '<span class="text-info">Ejecutando comando mkdisk...</span><br>\n'
     elif (comando.lower() == "rmdisk"):
         script = Rmdisk()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando rmdisk..."))
+        mensajes += '<span class="text-info">Ejecutando comando rmdisk...</span><br>\n'
     elif (comando.lower() == "fdisk"):
         script = Fdisk()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando fdisk..."))
+        mensajes += '<span class="text-info">Ejecutando comando fdisk...</span><br>\n'
     elif (comando.lower() == "mount"):
         script = Mount()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando mount..."))
+        mensajes += '<span class="text-info">Ejecutando comando mount...</span><br>\n'
     elif (comando.lower() == "unmount"):
         script = Unmount()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando unmount..."))
+        mensajes += '<span class="text-info">Ejecutando comando unmount...</span><br>\n'
     elif (comando.lower() == "mkfs"):
         script = Mkfs()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando mkfs..."))
+        mensajes += '<span class="text-info">Ejecutando comando mkfs...</span><br>\n'
     #comandos de usuarios y grupos
     elif (comando.lower() == "login"):
         script = Login()
+        mensajes += '<span class="text-info">Ejecutando comando login...</span><br>\n'
     elif (comando.lower() == "logout"):
-        #script = Logout()
-        pass
+        mensajes += '<span class="text-info">Ejecutando comando logout...</span><br>\n'
     elif (comando.lower() == "mkgrp"):
         script = Mkgrp()
+        mensajes += '<span class="text-info">Ejecutando comando mkgrp...</span><br>\n'
     elif (comando.lower() == "rmgrp"):
         script = Rmgrp()
+        mensajes += '<span class="text-info">Ejecutando comando rmgrp...</span><br>\n'
     elif (comando.lower() == "mkusr"):
         script = Mkusr()
+        mensajes += '<span class="text-info">Ejecutando comando mkusr...</span><br>\n'
     elif (comando.lower() == "rmusr"):
         script = Rmusr()
+        mensajes += '<span class="text-info">Ejecutando comando rmusr...</span><br>\n'
     #comandos de archivos y permisos
     elif (comando.lower() == "mkfile"):
         script = Mkfile()
+        mensajes += '<span class="text-info">Ejecutando comando mkfile...</span><br>\n'
     elif (comando.lower() == "mkdir"):
         script = Mkdir()
+        mensajes += '<span class="text-info">Ejecutando comando mkdir...</span><br>\n'
     elif (comando.lower() == "execute"):
         script = Execute()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando execute..."))
+        mensajes += '<span class="text-info">Ejecutando comando execute...</span><br>\n'
     elif (comando.lower() == "rep"):
         script = Rep()
-        print("\033[36m<<System>> {}\033[00m" .format("Ejecutando comando rep..."))
+        mensajes += '<span class="text-info">Ejecutando comando rep...</span><br>\n'
 
 def comando_ejecutar(parametro, valor):
     global comando, script, particiones_montadas, usuario_actual, info, mensajes
     #COMANDO MKDISK
     if (comando.lower() == "mkdisk"):
         if (parametro.lower() == 'size'):
-            print("leyendo tamaño del disco...")
-            mensajes += '\n<span class="text-white"> leyendo tamaño del disco...</span><br>'
+            mensajes += '<span class="text-white">leyendo tamaño del disco...</span><br>\n'
             script.setSize(int(valor))
         elif (parametro.lower() == 'path'):
-            print("leyendo ruta del disco...")
-            mensajes += '\n<span class="text-white"> leyendo ruta del disco...</span><br>'
+            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'fit'):
-            print("leyendo ajuste del disco...")
-            mensajes += '\n<span class="text-white"> leyendo ajuste del disco...</span><br>'
+            mensajes += '<span class="text-white">leyendo ajuste del disco...</span><br>\n'
             script.setFit(valor)
         elif (parametro.lower() == 'unit'):
-            print("leyendo unidad del disco...")
-            mensajes += '\n<span class="text-white"> leyendo unidad del disco...</span><br>'
+            mensajes += '<span class="text-white">leyendo unidad del disco...</span><br>\n'
             script.setUnit(valor)
         elif (parametro.lower() == "ejecutar"):
+            mensajes += script.mensajes
             if (script.errors == 0):
                 #crear un arhivo vacio
                 tamano_archivo = script.getSize()
@@ -129,55 +131,53 @@ def comando_ejecutar(parametro, valor):
                         archivo.seek(pos)
                         archivo.write(particion.pack_data())
                     pos += particion.getLength()
-                print("\033[1;32m<<Success>> {}\033[00m" .format("Disco creado exitosamente."))
-                print("\033[36m<<System>> {}\033[00m" .format("...Comando mkdisk ejecutado"))
-                mensajes += '\n<span class="text-success"><i class="fa-solid fa-check"></i> Disco creado exitosamente.</span><br>'
-                mensajes += '\n<span class="text-info"> ...Comando mkdisk ejecutado</span><br>'
-                #print(mensajes)
+                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Disco creado exitosamente.</span><br>\n'
+                mensajes += '<span class="text-info">...Comando mkdisk ejecutado</span><br>\n'
             else: 
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo crear el disco."))
-                mensajes += '\n<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el disco.</span>'
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el disco.</span><br>\n'
         else:
             script.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
-            mensajes += '\n<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span>'
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO RMDISK
     elif (comando.lower() == "rmdisk"):
-        if (parametro.lower() == 'path'):   
-            print("leyendo ruta del disco...")   
+        if (parametro.lower() == 'path'):
+            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'ejecutar'):
+            mensajes += script.mensajes
             if (script.errors == 0):
-                script.deleteDisk()
-                print("\033[36m<<System>> {}\033[00m" .format("...Comando rmdisk ejecutado"))
+                os.remove(script.getPath())
+                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Disco eliminado exitosamente.</span><br>\n'
+                mensajes += '<span class="text-info">...Comando rmdisk ejecutado</span><br>\n'
             else:
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo eliminar el disco."))
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el disco.</span><br>\n'
         else:
             script.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO FDISK
     elif (comando.lower() == 'fdisk'):
         if (parametro.lower() == 'size'):
-            print("leyendo tamaño de la particion...")
+            mensajes += '<span class="text-white">leyendo tamaño de la particion...</span><br>\n'
             script.setSize(int(valor))
         elif (parametro.lower() == 'path'):
-            print("leyendo ruta del disco...")
+            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'name'):
-            print("leyendo nombre de la particion...")
+            mensajes += '<span class="text-white">leyendo nombre de la particion...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == 'unit'):
-            print("leyendo unidad de la particion...")
+            mensajes += '<span class="text-white">leyendo unidad de la particion...</span><br>\n'
             script.setUnit(valor)
         elif(parametro.lower() == 'type'):
-            print("leyendo tipo de la particion...")
+            mensajes += '<span class="text-white">leyendo tipo de la particion...</span><br>\n'
             script.setType(valor)
         elif(parametro.lower() == 'fit'):
-            print("leyendo ajuste de la particion...")
+            mensajes += '<span class="text-white">leyendo ajuste de la particion...</span><br>\n'
             script.setFit(valor)
         elif (parametro.lower() == 'ejecutar'):
+            mensajes += script.mensajes
             if (script.errors == 0):
                 #obtener mbr
                 mbr = Mbr()
@@ -198,16 +198,16 @@ def comando_ejecutar(parametro, valor):
                 #verificar si nombre existe
                 for partition in mbr.getPartitions():
                     if (partition.getPart_name().rstrip("\x00") == script.getName()):
-                        script.errors += 1
-                        print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'name' ya existe."))
-                        break
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "name" ya existe.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                        return None
                 #verificar tipo de particion
                 if (script.getType().lower() == "e"):
                     for partition in mbr.getPartitions():
                         if (partition.getPart_type().lower() == "e"):
-                            script.errors += 1
-                            print("\033[91m<<Error>> {}\033[00m" .format("Ya existe una particion extendida."))
-                            break
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ya existe una particion extendida.</span><br>\n'
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                            return None
                 elif (script.getType().lower() == "l"):
                     extendida_existe = False
                     for partition in mbr.getPartitions():
@@ -215,8 +215,9 @@ def comando_ejecutar(parametro, valor):
                             extendida_existe = True
                             break
                     if not(extendida_existe):
-                        script.errors += 1
-                        print("\033[91m<<Error>> {}\033[00m" .format("No existe una particion extendida."))
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No existe una particion extendida.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                        return None
                 #convertir tamaño a bytes
                 size = 0
                 if (script.unit.lower() == "m"):
@@ -225,174 +226,175 @@ def comando_ejecutar(parametro, valor):
                     size = script.getSize()*1024
                 else:
                     size = script.getSize()
-                #si no hay errores, buscar lugar para la particion
-                if (script.errors == 0):
-                    pos_particion = None
-                    if (script.getType().lower() == "p" or script.getType().lower() == "e"):
-                        temp = 0
-                        pos_en_disco = 21 + 4 * 28
-                        if (mbr.getFit().lower() == 'bf'):
-                            diferencia_minima = float('inf')
-                            for i, partition in enumerate(mbr.getPartitions()):
-                                if (partition.getPart_status == "0"):
-                                    #diferencia = partition.getPart_s() - script.getSize()
-                                    diferencia = partition.getPart_s() - size
-                                    if diferencia >= 0 and diferencia < diferencia_minima:
-                                        pos_particion = i
-                                        diferencia_minima = diferencia
-                                else:
-                                    pos_en_disco += partition.getPart_s()
-                        elif (mbr.getFit().lower() == 'ff'):
-                            for i, partition in enumerate(mbr.getPartitions()):
-                                if (partition.getPart_status() == "0"):
-                                    #if partition.getPart_s() >= script.getSize():
-                                    if partition.getPart_s() >= size:
-                                        pos_particion = i
-                                else:
-                                    pos_en_disco += partition.getPart_s()
-                        elif (mbr.getFit().lower() == 'wf'):
-                            for i, partition in enumerate(mbr.getPartitions()):
-                                if (partition.getPart_status() == "0"):
-                                    #if (partition.getPart_s() >= script.getSize() and partition.getPart_s() >= temp):
-                                    if (partition.getPart_s() >= size and partition.getPart_s() >= temp):
-                                        pos_particion = i
-                                        temp = partition.getPart_s()
-                                else:
-                                    pos_en_disco += partition.getPart_s()
-                        if (pos_particion == None):
-                            for i, partition in enumerate(mbr.getPartitions()):
-                                if (partition.getPart_status() == "0"):
-                                    if (partition.getPart_s() == 0):
-                                        pos_particion = i
-                                        break                           
-                                else:
-                                    pos_en_disco += partition.getPart_s()
-                    elif (script.getType().lower() == "l"):
-                        particion_extendida = None
-                        for partition in mbr.getPartitions():
-                            if (partition.getPart_type().lower() == "e"):
-                                particion_extendida = partition
-                                break
-                        inicio = particion_extendida.getPart_start()
-                        #obtener ebr
-                        ebr = Ebr()
-                        with open(script.getPath(), 'rb+') as archivo:
-                            archivo.seek(inicio)
-                            contenido = archivo.read(ebr.getLength())
-                        ebr = ebr.unpack_data(contenido)
-                        if (ebr.getPart_s() == 0):
-                            if (particion_extendida.getPart_s() > (ebr.getLength() + size)):
-                                ebr.setPart_status("1")
-                                ebr.setPart_fit(script.getFit()[0])
-                                ebr.setPart_start(inicio+ebr.getLength())
-                                ebr.setPart_s(size)
-                                ebr.setPart_next(-1)
-                                ebr.setPart_name(script.getName())
-                                #escribir ebr
-                                with open(script.getPath(), 'rb+') as archivo:
-                                    archivo.seek(inicio)
-                                    archivo.write(ebr.pack_data())
-                                print("\033[1;32m<<Success>> {}\033[00m" .format("Particion creada exitosamente."))
-                                print("\033[36m<<System>> {}\033[00m" .format("...Comando fdisk ejecutado"))
-                                return None
+                #Buscar lugar para la particion
+                pos_particion = None
+                if (script.getType().lower() == "p" or script.getType().lower() == "e"):
+                    temp = 0
+                    pos_en_disco = 21 + 4 * 28
+                    if (mbr.getFit().lower() == 'bf'):
+                        diferencia_minima = float('inf')
+                        for i, partition in enumerate(mbr.getPartitions()):
+                            if (partition.getPart_status == "0"):
+                                diferencia = partition.getPart_s() - size
+                                if diferencia >= 0 and diferencia < diferencia_minima:
+                                    pos_particion = i
+                                    diferencia_minima = diferencia
                             else:
-                                print("\033[91m<<Error>> {}\033[00m" .format("Espacio insuficiente en disco."))
-                                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo crear la particion."))
-                                return None
-                        else:
-                            puntero = inicio
-                            tam_disp = particion_extendida.getPart_s() - (ebr.getLength() + ebr.getPart_s())
-                            while True:
-                                if (ebr.getPart_name().rstrip("\x00") == script.getName()):
-                                    print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'name' ya existe."))
-                                    print("\033[91m<<Error>> {}\033[00m" .format("No se pudo crear la particion."))
-                                    return None
-                                if (ebr.getPart_next() == -1):
-                                    if (tam_disp > (size + 32)):
-                                        ebr.setPart_next(ebr.getPart_start() + ebr.getPart_s())
-                                        #escribir ebr
-                                        with open(script.getPath(), 'rb+') as archivo:
-                                            archivo.seek(puntero)
-                                            archivo.write(ebr.pack_data())
-                                        puntero += ebr.getLength() + ebr.getPart_s()   
-                                        ebr = Ebr()
-                                        ebr.setPart_status("1")
-                                        ebr.setPart_fit(script.getFit()[0])
-                                        ebr.setPart_start(puntero+ebr.getLength())
-                                        ebr.setPart_s(size)
-                                        ebr.setPart_next(-1)
-                                        ebr.setPart_name(script.getName())
-                                        #escribir ebr
-                                        with open(script.getPath(), 'rb+') as archivo:
-                                            archivo.seek(puntero)
-                                            archivo.write(ebr.pack_data())
-                                        print("\033[1;32m<<Success>> {}\033[00m" .format("Particion creada exitosamente."))
-                                        print("\033[36m<<System>> {}\033[00m" .format("...Comando fdisk ejecutado"))
-                                        return None
-                                    else:
-                                        print("\033[91m<<Error>> {}\033[00m" .format("Espacio insuficiente en disco."))
-                                        print("\033[91m<<Error>> {}\033[00m" .format("No se pudo crear la particion."))
-                                        return None
-                                else:
-                                    puntero += ebr.getLength() + ebr.getPart_s() 
-                                    #obtener siguiente ebr
-                                    ebr = Ebr()
-                                    with open(script.getPath(), 'rb+') as archivo:
-                                        archivo.seek(puntero)
-                                        contenido = archivo.read(ebr.getLength())
-                                    ebr = ebr.unpack_data(contenido)
-                                    tam_disp -= (ebr.getLength() + ebr.getPart_s())
-                    
-                    if (pos_particion != None):
-                        tam_usado = 133
-                        for particion in mbr.getPartitions():
-                            tam_usado += particion.getPart_s()
-                        tam_disp = mbr.getTamano() - tam_usado
-                        mbr.getPartitions()[pos_particion].setPart_status("1")
-                        mbr.getPartitions()[pos_particion].setPart_type(script.getType())
-                        mbr.getPartitions()[pos_particion].setPart_fit(script.getFit()[0])
-                        mbr.getPartitions()[pos_particion].setPart_start(pos_en_disco)
-                        if (size > tam_disp):
-                            print("\033[91m<<Error>> {}\033[00m" .format("Espacio insuficiente en disco."))
-                            print("\033[91m<<Error>> {}\033[00m" .format("No se pudo crear la particion."))
-                            return None
-                        mbr.getPartitions()[pos_particion].setPart_s(size)     
-                        mbr.getPartitions()[pos_particion].setPart_name(script.getName())
-                        #escribir mbr
-                        with open(script.getPath(), 'rb+') as archivo:
-                            archivo.write(mbr.pack_data())
-                        #escribir particiones
-                        pos = mbr.getLength()
-                        for particion in mbr.getPartitions():
-                            with open(script.getPath(), 'rb+') as archivo:
-                                archivo.seek(pos)
-                                archivo.write(particion.pack_data())
-                            pos += particion.getLength()
-                        if (script.getType().lower() == "e"):
-                            ebr = Ebr()
+                                pos_en_disco += partition.getPart_s()
+                    elif (mbr.getFit().lower() == 'ff'):
+                        for i, partition in enumerate(mbr.getPartitions()):
+                            if (partition.getPart_status() == "0"):
+                                if partition.getPart_s() >= size:
+                                    pos_particion = i
+                            else:
+                                pos_en_disco += partition.getPart_s()
+                    elif (mbr.getFit().lower() == 'wf'):
+                        for i, partition in enumerate(mbr.getPartitions()):
+                            if (partition.getPart_status() == "0"):
+                                if (partition.getPart_s() >= size and partition.getPart_s() >= temp):
+                                    pos_particion = i
+                                    temp = partition.getPart_s()
+                            else:
+                                pos_en_disco += partition.getPart_s()
+                    #Si no se creo la particon, buscar de nuevo lugar
+                    if (pos_particion == None):
+                        for i, partition in enumerate(mbr.getPartitions()):
+                            if (partition.getPart_status() == "0"):
+                                if (partition.getPart_s() == 0):
+                                    pos_particion = i
+                                    break                           
+                            else:
+                                pos_en_disco += partition.getPart_s()
+                elif (script.getType().lower() == "l"):
+                    particion_extendida = None
+                    for partition in mbr.getPartitions():
+                        if (partition.getPart_type().lower() == "e"):
+                            particion_extendida = partition
+                            break
+                    inicio = particion_extendida.getPart_start()
+                    #obtener ebr
+                    ebr = Ebr()
+                    with open(script.getPath(), 'rb+') as archivo:
+                        archivo.seek(inicio)
+                        contenido = archivo.read(ebr.getLength())
+                    ebr = ebr.unpack_data(contenido)
+                    if (ebr.getPart_s() == 0):
+                        if (particion_extendida.getPart_s() > (ebr.getLength() + size)):
+                            ebr.setPart_status("1")
+                            ebr.setPart_fit(script.getFit()[0])
+                            ebr.setPart_start(inicio+ebr.getLength())
+                            ebr.setPart_s(size)
+                            ebr.setPart_next(-1)
+                            ebr.setPart_name(script.getName())
                             #escribir ebr
                             with open(script.getPath(), 'rb+') as archivo:
-                                archivo.seek(pos_en_disco)
-                                archivo.write(ebr.pack_data())            
-                        print("\033[1;32m<<Success>> {}\033[00m" .format("Particion creada exitosamente."))
-                        print("\033[36m<<System>> {}\033[00m" .format("...Comando fdisk ejecutado"))
+                                archivo.seek(inicio)
+                                archivo.write(ebr.pack_data())
+                            mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                            mensajes += '<span class="text-info">...Comando fdisk ejecutado</span><br>\n'
+                            return None
+                        else:
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                            return None
                     else:
-                        script.errors += 1
-                        print("\033[91m<<Error>> {}\033[00m" .format("Las 4 particiones permitidas, ya han sido usadas."))
+                        puntero = inicio
+                        tam_disp = particion_extendida.getPart_s() - (ebr.getLength() + ebr.getPart_s())
+                        while True:
+                            if (ebr.getPart_name().rstrip("\x00") == script.getName()):                              
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "name" ya existe.</span><br>\n'
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                                return None
+                            if (ebr.getPart_next() == -1):
+                                if (tam_disp > (size + 32)):
+                                    ebr.setPart_next(ebr.getPart_start() + ebr.getPart_s())
+                                    #escribir ebr
+                                    with open(script.getPath(), 'rb+') as archivo:
+                                        archivo.seek(puntero)
+                                        archivo.write(ebr.pack_data())
+                                    puntero += ebr.getLength() + ebr.getPart_s()   
+                                    ebr = Ebr()
+                                    ebr.setPart_status("1")
+                                    ebr.setPart_fit(script.getFit()[0])
+                                    ebr.setPart_start(puntero+ebr.getLength())
+                                    ebr.setPart_s(size)
+                                    ebr.setPart_next(-1)
+                                    ebr.setPart_name(script.getName())
+                                    #escribir ebr
+                                    with open(script.getPath(), 'rb+') as archivo:
+                                        archivo.seek(puntero)
+                                        archivo.write(ebr.pack_data())
+                                    mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                                    mensajes += '<span class="text-info">...Comando fdisk ejecutado</span><br>\n'
+                                    return None
+                                else:
+                                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
+                                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                                    return None
+                            else:
+                                puntero += ebr.getLength() + ebr.getPart_s() 
+                                #obtener siguiente ebr
+                                ebr = Ebr()
+                                with open(script.getPath(), 'rb+') as archivo:
+                                    archivo.seek(puntero)
+                                    contenido = archivo.read(ebr.getLength())
+                                ebr = ebr.unpack_data(contenido)
+                                tam_disp -= (ebr.getLength() + ebr.getPart_s())
+                #Crear particion primaria o extendida
+                if (pos_particion != None):
+                    tam_usado = 133
+                    for particion in mbr.getPartitions():
+                        tam_usado += particion.getPart_s()
+                    tam_disp = mbr.getTamano() - tam_usado
+                    mbr.getPartitions()[pos_particion].setPart_status("1")
+                    mbr.getPartitions()[pos_particion].setPart_type(script.getType())
+                    mbr.getPartitions()[pos_particion].setPart_fit(script.getFit()[0])
+                    mbr.getPartitions()[pos_particion].setPart_start(pos_en_disco)
+                    if (size > tam_disp):
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                        return None
+                    mbr.getPartitions()[pos_particion].setPart_s(size)     
+                    mbr.getPartitions()[pos_particion].setPart_name(script.getName())
+                    #escribir mbr
+                    with open(script.getPath(), 'rb+') as archivo:
+                        archivo.write(mbr.pack_data())
+                    #escribir particiones
+                    pos = mbr.getLength()
+                    for particion in mbr.getPartitions():
+                        with open(script.getPath(), 'rb+') as archivo:
+                            archivo.seek(pos)
+                            archivo.write(particion.pack_data())
+                        pos += particion.getLength()
+                    if (script.getType().lower() == "e"):
+                        ebr = Ebr()
+                        #escribir ebr
+                        with open(script.getPath(), 'rb+') as archivo:
+                            archivo.seek(pos_en_disco)
+                            archivo.write(ebr.pack_data())
+                    mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                    mensajes += '<span class="text-info">...Comando fdisk ejecutado</span><br>\n'
+                    return None
+                else:
+                    script.errors += 1
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Las 4 particiones permitidas, ya han sido usadas.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                    return None
             if (script.errors != 0):
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo crear la particion."))
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
         else:
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #cOMANDO MOUNT
     elif (comando.lower() == 'mount'):
         if (parametro.lower() == 'path'):
-            print("leyendo ruta del disco...")
+            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'name'):
-            print("leyendo nombre de la particion...")
+            mensajes += '<span class="text-white">leyendo nombre de la particion...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == 'ejecutar'):
+            mensajes += script.mensajes
             if (script.errors == 0):
                 #obtener mbr
                 mbr = Mbr()
@@ -452,24 +454,24 @@ def comando_ejecutar(parametro, valor):
 
                 if (num_particion == ""):
                     script.errors += 1
-                    print("\033[91m<<Error>> {}\033[00m" .format("La particion no existe."))
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no existe.</span><br>\n'
                 else:
                     id = "62" + num_particion + os.path.splitext(os.path.basename(script.getPath()))[0]
                     if not(id in particiones_montadas):   
                         #particiones_montadas[id] = script.getPath()
                         particiones_montadas[id] = [script.getName(), script.getPath()]
-                        print("Particiones montadas:")
+                        mensajes += '<span class="text-white">Particiones montadas:</span><br>\n'
                         for clave, valor in particiones_montadas.items():
-                            print(clave[1])
-                        print("\033[1;32m<<Success>> {}\033[00m" .format("Particion montada exitosamente."))
-                        print("\033[36m<<System>> {}\033[00m" .format("...Comando mount ejecutado"))
+                            mensajes += '<span class="text-white">' + clave[1] + '</span><br>\n'
+                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion montada exitosamente.</span><br>\n'
+                        mensajes += '<span class="text-info">...Comando mount ejecutado</span><br>\n'
                     else:
                         script.errors += 1
-                        print("\033[91m<<Error>> {}\033[00m" .format("La particion ya esta montada."))
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ya esta montada.</span><br>\n'
             if (script.errors != 0):
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo montar la particion."))
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo montar la particion.</span><br>\n'
         else:
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO UNMOUNT
     elif (comando.lower() == 'unmount'):
@@ -480,7 +482,7 @@ def comando_ejecutar(parametro, valor):
             if script.getId() in particiones_montadas:   
                 particiones_montadas.pop(script.getId())
                 print("\033[1;32m<<Success>> {}\033[00m" .format("Particion desmontada exitosamente."))
-                print("\033[36m<<System>> {}\033[00m" .format("...Comando unmount ejecutado"))
+                mensajes += '<span class="text-info">...Comando unmount ejecutado</span><br>\n'
             else:
                 print("\033[91m<<Error>> {}\033[00m" .format("La particion no esta montada."))
                 print("\033[91m<<Error>> {}\033[00m" .format("No se pudo desmontar la particion."))
@@ -996,20 +998,20 @@ def comando_ejecutar(parametro, valor):
     #COMANDO EXECUTE
     elif (comando.lower() == 'execute'):
         if (parametro.lower() == "path"):
-            print("leyendo ruta del archivo...")
+            mensajes += '<span class="text-white">leyendo ruta del archivo...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'ejecutar'):
             if script.errors == 0:
                 with open(script.getPath(), 'r') as archivo:
                     contenido = archivo.read()
-                print("\033[36m<<System>> {}\033[00m" .format("...Comando execute ejecutado"))
+                mensajes += '<span class="text-info">...Comando execute ejecutado</span><br>\n'
                 return contenido
                 #return [contenido, mensajes]
             else:
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo ejecutar el archivo."))
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo ejecutar el archivo.</span><br>\n'
         else:
             script.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO REP
     elif (comando.lower() == "rep"):
@@ -1101,7 +1103,7 @@ def comando_ejecutar(parametro, valor):
                 elif (script.getName().lower() == "disk"):
                     generarReporteDisco(path, script.getPath())
                 print("\033[1;32m<<Success>> {}\033[00m" .format("Reporte generado exitosamente."))
-                print("\033[36m<<System>> {}\033[00m" .format("...Comando rep ejecutado"))
+                mensajes += '<span class="text-info">...Comando rep ejecutado</span><br>\n'
             if (script.errors != 0):
                 print("\033[91m<<Error>> {}\033[00m" .format("No se pudo generar el reporte."))
         else:
@@ -1439,6 +1441,10 @@ def verificarNombre(pathReport):
             pathReport = carpetas + "/" + nombre + extension
             n += 1
     return pathReport
+
+def setM():
+    global mensajes
+    mensajes = ""
 
 def getMessages():
     global mensajes

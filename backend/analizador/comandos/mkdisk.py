@@ -7,6 +7,7 @@ class Mkdisk:
         self.fit = fit
         self.unit = unit
         self.username = os.getlogin()
+        self.mensajes = ""
         self.errors = 0
 
     #SET
@@ -15,7 +16,7 @@ class Mkdisk:
             self.size = size
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'size' debe ser mayor a 0."))
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "size" debe ser mayor a 0.</span><br>\n'
 
     def setPath(self, path):
         self.path = path.replace("user", self.username).replace('"', "")
@@ -25,7 +26,7 @@ class Mkdisk:
                 os.makedirs(carpetas)
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El disco ya existe."))
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El disco ya existe.</span><br>\n'
     
     def setFit(self, fit):
         if (fit.lower() == "bf"):
@@ -36,7 +37,7 @@ class Mkdisk:
             self.fit = fit
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'fit' debe ser 'BF', 'FF' o 'WF'."))
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "fit" debe ser "BF", "FF" o "WF".</span><br>\n'
 
     def setUnit(self, unit):
         if (unit.lower() == 'k'):
@@ -45,8 +46,8 @@ class Mkdisk:
             self.unit = unit
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'unit' debe ser 'K' o 'M'."))
-
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "unit" debe ser "K" o "M".</span><br>\n'
+    
     #GET
     def getSize(self):
         return self.size

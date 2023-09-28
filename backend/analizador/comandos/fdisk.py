@@ -1,5 +1,4 @@
 import os
-import struct
 
 class Fdisk:
     def __init__(self, size = 0, path = "", name = "",  unit = "K", type = "P", fit = "WF"):
@@ -10,6 +9,7 @@ class Fdisk:
         self.type = type
         self.fit = fit
         self.username = os.getlogin()
+        self.mensajes = ""
         self.errors = 0
 
     #SET
@@ -18,14 +18,13 @@ class Fdisk:
             self.size = size
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'size' debe ser mayor a 0."))
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "size" debe ser mayor a 0.</span><br>\n'
 
     def setPath(self, path):
         self.path = path.replace("user", self.username).replace('"', "")
         if not (os.path.exists(self.path)): 
-            self.errors += 1  
-            print("\033[91m<<Error>> {}\033[00m" .format("Disco no encontrado."))
-    
+            self.errors += 1
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El disco no existe.</span><br>\n'    
 
     def setName(self, name):
         self.name = name
@@ -39,7 +38,7 @@ class Fdisk:
             self.unit = unit
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'unit' debe ser 'B', 'K' o 'M'."))
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "unit" debe ser "B", "K" o "M".</span><br>\n'
 
     def setType(self, type):
         if (type.lower() == "p"):
@@ -50,7 +49,7 @@ class Fdisk:
             self.type = type
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'type' debe ser 'P', 'E' o 'L'."))
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "type" debe ser "P", "E" o "L".</span><br>\n'
 
     def setFit(self, fit):
         if (fit.lower() == "bf"):
@@ -61,7 +60,7 @@ class Fdisk:
             self.fit = fit
         else:
             self.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("El valor del parametro 'fit' debe ser 'BF', 'FF' o 'WF'."))
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "fit" debe ser "BF", "FF" o "WF".</span><br>\n'
 
     #GET
     def getSize(self):
