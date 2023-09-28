@@ -458,11 +458,10 @@ def comando_ejecutar(parametro, valor):
                 else:
                     id = "62" + num_particion + os.path.splitext(os.path.basename(script.getPath()))[0]
                     if not(id in particiones_montadas):   
-                        #particiones_montadas[id] = script.getPath()
                         particiones_montadas[id] = [script.getName(), script.getPath()]
-                        mensajes += '<span class="text-white">Particiones montadas:</span><br>\n'
+                        mensajes += '<span style="color: #9A2EFE">Particiones montadas:</span><br>\n'
                         for clave, valor in particiones_montadas.items():
-                            mensajes += '<span class="text-white">' + clave[1] + '</span><br>\n'
+                            mensajes += '<span style="color: #9A2EFE">' + clave + '</span><br>\n'
                         mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion montada exitosamente.</span><br>\n'
                         mensajes += '<span class="text-info">...Comando mount ejecutado</span><br>\n'
                     else:
@@ -476,129 +475,34 @@ def comando_ejecutar(parametro, valor):
     #COMANDO UNMOUNT
     elif (comando.lower() == 'unmount'):
         if (parametro.lower() == 'id'):
-            print("leyendo id de la particion...")
+            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
             script.setId(valor)
         elif (parametro.lower() == 'ejecutar'):
             if script.getId() in particiones_montadas:   
                 particiones_montadas.pop(script.getId())
-                print("\033[1;32m<<Success>> {}\033[00m" .format("Particion desmontada exitosamente."))
+                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion desmontada exitosamente.</span><br>\n'
                 mensajes += '<span class="text-info">...Comando unmount ejecutado</span><br>\n'
             else:
-                print("\033[91m<<Error>> {}\033[00m" .format("La particion no esta montada."))
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo desmontar la particion."))
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo desmontar la particion.</span><br>\n'
         else:
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO MKFS
     elif (comando.lower() == 'mkfs'):
         if (parametro.lower() == 'id'):
-            print("leyendo id de la particion...")
+            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
             script.setId(valor)
         elif (parametro.lower() == 'type'):
-            print("leyendo tipo de formateo...")
+            mensajes += '<span class="text-white">leyendo tipo de formateo...</span><br>\n'
             script.setType(valor)
         elif (parametro.lower() == 'ejecutar'):
-            #buscar particion o disco
-            if script.getId() in particiones_montadas:
-                name_part = particiones_montadas[script.getId()][0]
-                path = particiones_montadas[script.getId()][1]
-                if not(os.path.exists(path)):
-                    return None
-                #obtener mbr
-                mbr = Mbr()
-                with open(path, 'rb+') as archivo:
-                    archivo.seek(0)
-                    contenido = archivo.read(mbr.getLength())
-                mbr = mbr.unpack_data(contenido)
-                #obtener particiones
-                pos = mbr.getLength()
-                for i in range(4):
-                    particion = Partition()
-                    with open(path, 'rb+') as archivo:
-                        archivo.seek(pos)
-                        contenido = archivo.read(particion.getLength())
-                    particion = particion.unpack_data(contenido)
-                    mbr.getPartitions()[i] = particion
-                    pos += particion.getLength()
-                #buscar particion
-                part_formatear = None
-                for i, partition in enumerate(mbr.getPartitions()):
-                    if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
-                        if (partition.getPart_name().rstrip("\x00") == name_part):
-                            part_formatear = partition
-                            break
-                    elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
-                        if (partition.getPart_name().rstrip("\x00") == name_part):
-                            part_formatear = partition
-                            break
-                        else:
-                            puntero = partition.getPart_start()
-                            #obtener ebr
-                            ebr = Ebr()
-                            with open(script.getPath(), 'rb+') as archivo:
-                                archivo.seek(puntero)
-                                contenido = archivo.read(ebr.getLength())
-                            ebr = ebr.unpack_data(contenido)
-                            while True:
-                                if (ebr.getPart_name().rstrip("\x00") == script.getName()):
-                                    part_formatear = partition
-                                    break
-                                if (ebr.getPart_next() == -1):
-                                    break
-                                else:
-                                    puntero = ebr.getPart_next()
-                                    #obtener ebr
-                                    ebr = Ebr()
-                                    with open(script.getPath(), 'rb+') as archivo:
-                                        archivo.seek(puntero)
-                                        contenido = archivo.read(ebr.getLength())
-                                    ebr = ebr.unpack_data(contenido)
-                #calculos
-                super_bloque = SuperBloque()
-                #archivo_bloque = ArchivoBloque()
-                inodo = Inodo()
-                numerator = part_formatear.getPart_s() - super_bloque.getLength()
-                denominator = 4 + inodo.getLength() + 3 * 64
-                n = math.floor(numerator / denominator)
-                print(n)
-                #Escribir contenido en el archivo binario
-                '''
-                with open('users.txt', 'wb') as archivo:
-                    archivo.write(b'1, G, root\n')
-                    archivo.write(b'1, U, root, root, 123\n')
-                '''
-                #Escribir archivo users.txt en particion
-                with open(path, 'rb+') as archivo:
-                    archivo.seek(part_formatear.getPart_start())
-                    contenido = ('1, G, root\n1, U, root, root, 123$').encode('utf-8')
-                    archivo.write(contenido)
-                print("Particion formateada exitosamente")
-                return None
-                #####
-            else:
-                print("\033[91m<<Error>> {}\033[00m" .format("La particion no existe."))
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo formatear la particion."))
-        else:
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
-        return None
-    #COMANDO LOGIN
-    elif (comando.lower() == 'login'):
-        if (parametro.lower() == 'user'):
-            script.setUser(valor)
-        elif (parametro.lower() == 'pass'):
-            script.setPassword(valor)
-        elif (parametro.lower() == 'id'):
-            script.setId(valor)
-        elif(parametro.lower() == 'ejecutar'):
-            usuario_existe = False
-            contraseña_correcta = False
-            if (usuario_actual == ""):
-                #buscar particion en particiones montadas
+            if (script.errors == 0):
+                #buscar particion o disco
                 if script.getId() in particiones_montadas:
                     name_part = particiones_montadas[script.getId()][0]
                     path = particiones_montadas[script.getId()][1]
                     if not(os.path.exists(path)):
-                        print("¡el disco no existe!")
                         return None
                     #obtener mbr
                     mbr = Mbr()
@@ -617,27 +521,27 @@ def comando_ejecutar(parametro, valor):
                         mbr.getPartitions()[i] = particion
                         pos += particion.getLength()
                     #buscar particion
-                    part_formateada = None
+                    part_formatear = None
                     for i, partition in enumerate(mbr.getPartitions()):
                         if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
                             if (partition.getPart_name().rstrip("\x00") == name_part):
-                                part_formateada = partition
+                                part_formatear = partition
                                 break
                         elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
                             if (partition.getPart_name().rstrip("\x00") == name_part):
-                                part_formateada = partition
+                                part_formatear = partition
                                 break
                             else:
                                 puntero = partition.getPart_start()
                                 #obtener ebr
                                 ebr = Ebr()
-                                with open(path, 'rb+') as archivo:
+                                with open(script.getPath(), 'rb+') as archivo:
                                     archivo.seek(puntero)
                                     contenido = archivo.read(ebr.getLength())
                                 ebr = ebr.unpack_data(contenido)
                                 while True:
                                     if (ebr.getPart_name().rstrip("\x00") == script.getName()):
-                                        part_formateada = partition
+                                        part_formatear = partition
                                         break
                                     if (ebr.getPart_next() == -1):
                                         break
@@ -645,67 +549,176 @@ def comando_ejecutar(parametro, valor):
                                         puntero = ebr.getPart_next()
                                         #obtener ebr
                                         ebr = Ebr()
-                                        with open(path, 'rb+') as archivo:
+                                        with open(script.getPath(), 'rb+') as archivo:
                                             archivo.seek(puntero)
                                             contenido = archivo.read(ebr.getLength())
                                         ebr = ebr.unpack_data(contenido)
-                    #obtener inicio de archivos users.txt
-                    if part_formateada == None:
-                        print("No se encontro la particion")
-                        return None
-                    ini_archivo = part_formateada.getPart_start()
-                    #verificar si esta formateada la particion
+                    #calculos
+                    super_bloque = SuperBloque()
+                    #archivo_bloque = ArchivoBloque()
+                    inodo = Inodo()
+                    numerator = part_formatear.getPart_s() - super_bloque.getLength()
+                    denominator = 4 + inodo.getLength() + 3 * 64
+                    n = math.floor(numerator / denominator)
+                    print(n)
+                    #Escribir archivo users.txt en particion
                     with open(path, 'rb+') as archivo:
-                        archivo.seek(ini_archivo)
-                        byte = archivo.read(1)
-                        if byte == b'\x00':
-                            print(f"La particion {part_formateada.getPart_name()} no esta formateada")
-                            return None
-                    #obtener longitud de archivo users.txt
-                    pos = 0
-                    with open(path, 'rb+') as archivo:
-                        archivo.seek(ini_archivo)
-                        while True:
-                            byte = archivo.read(1)
-                            if not byte:
-                                break
-                            if byte == b'$':
-                                break
-                            pos += 1
-                    #obtener contenido de archivo users.txt
-                    with open(path, 'rb+') as archivo:
-                        archivo.seek(ini_archivo)
-                        contenido = archivo.read(pos)
-                    contenido = contenido.decode('utf-8')
-                    lineas = contenido.splitlines()
-                    #info = [ruta_disco, posicion_particion, contenido]
-                    info.append(path)
-                    info.append(ini_archivo)
-                    info.append(contenido)
-                    #verificar si existe usuario
-                    for linea in lineas:
-                        usuario_grupo = linea.strip().split(", ")
-                        if (usuario_grupo[1] == "U"):
-                            if (script.getUser() in usuario_grupo):
-                                usuario_existe = True
-                                if (script.getPassword() in usuario_grupo):
-                                    contraseña_correcta = True
-                                break
-                    if (usuario_existe):
-                        if (contraseña_correcta):
-                            print(f"¡Bienvenido {script.getUser()}!")
-                            usuario_actual = script.getUser()
-                        else:
-                            print("¡Contraseña incorrecta!")
-                    else:
-                        print("¡Usuario no existe!")
+                        archivo.seek(part_formatear.getPart_start())
+                        contenido = ('1, G, root\n1, U, root, root, 123$').encode('utf-8')
+                        archivo.write(contenido)
+                    mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion formateada exitosamente.</span><br>\n'
+                    mensajes += '<span class="text-info">...Comando mkfs ejecutado</span><br>\n'
+                    return None
+                    #####
                 else:
-                    print("la particion no esta montada.")
-
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no existe.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo formatear la particion.</span><br>\n'
             else:
-                print("Ya hay una sesion activa")
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo formatear la particion.</span><br>\n'
         else:
-            print("¡Error! parametro no valido.")
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+        return None
+    #COMANDO LOGIN
+    elif (comando.lower() == 'login'):
+        if (parametro.lower() == 'user'):
+            mensajes += '<span class="text-white">leyendo nombre del usuario...</span><br>\n'
+            script.setUser(valor)
+        elif (parametro.lower() == 'pass'):
+            mensajes += '<span class="text-white">leyendo contraseña del usuario...</span><br>\n'
+            script.setPassword(valor)
+        elif (parametro.lower() == 'id'):
+            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
+            script.setId(valor)
+        elif(parametro.lower() == 'ejecutar'):
+            if (script.errors == 0):
+                usuario_existe = False
+                contraseña_correcta = False
+                if (usuario_actual == ""):
+                    #buscar particion en particiones montadas
+                    if script.getId() in particiones_montadas:
+                        name_part = particiones_montadas[script.getId()][0]
+                        path = particiones_montadas[script.getId()][1]
+                        if not(os.path.exists(path)):
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El disco no existe.</span><br>\n'
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                            return None
+                        #obtener mbr
+                        mbr = Mbr()
+                        with open(path, 'rb+') as archivo:
+                            archivo.seek(0)
+                            contenido = archivo.read(mbr.getLength())
+                        mbr = mbr.unpack_data(contenido)
+                        #obtener particiones
+                        pos = mbr.getLength()
+                        for i in range(4):
+                            particion = Partition()
+                            with open(path, 'rb+') as archivo:
+                                archivo.seek(pos)
+                                contenido = archivo.read(particion.getLength())
+                            particion = particion.unpack_data(contenido)
+                            mbr.getPartitions()[i] = particion
+                            pos += particion.getLength()
+                        #buscar particion
+                        part_formateada = None
+                        for i, partition in enumerate(mbr.getPartitions()):
+                            if (partition.getPart_type().lower() == "p" and partition.getPart_status() == "1"):
+                                if (partition.getPart_name().rstrip("\x00") == name_part):
+                                    part_formateada = partition
+                                    break
+                            elif (partition.getPart_type().lower() == "e" and partition.getPart_status() == "1"):
+                                if (partition.getPart_name().rstrip("\x00") == name_part):
+                                    part_formateada = partition
+                                    break
+                                else:
+                                    puntero = partition.getPart_start()
+                                    #obtener ebr
+                                    ebr = Ebr()
+                                    with open(path, 'rb+') as archivo:
+                                        archivo.seek(puntero)
+                                        contenido = archivo.read(ebr.getLength())
+                                    ebr = ebr.unpack_data(contenido)
+                                    while True:
+                                        if (ebr.getPart_name().rstrip("\x00") == script.getName()):
+                                            part_formateada = partition
+                                            break
+                                        if (ebr.getPart_next() == -1):
+                                            break
+                                        else:
+                                            puntero = ebr.getPart_next()
+                                            #obtener ebr
+                                            ebr = Ebr()
+                                            with open(path, 'rb+') as archivo:
+                                                archivo.seek(puntero)
+                                                contenido = archivo.read(ebr.getLength())
+                                            ebr = ebr.unpack_data(contenido)
+                        #obtener inicio de archivos users.txt
+                        if part_formateada == None:
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se encontro la particion.</span><br>\n'
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                            return None
+                        ini_archivo = part_formateada.getPart_start()
+                        #verificar si esta formateada la particion
+                        with open(path, 'rb+') as archivo:
+                            archivo.seek(ini_archivo)
+                            byte = archivo.read(1)
+                            if byte == b'\x00':
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ' + part_formateada.getPart_name() + 'no esta formateada.</span><br>\n'
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                                return None
+                        #obtener longitud de archivo users.txt
+                        pos = 0
+                        with open(path, 'rb+') as archivo:
+                            archivo.seek(ini_archivo)
+                            while True:
+                                byte = archivo.read(1)
+                                if not byte:
+                                    break
+                                if byte == b'$':
+                                    break
+                                pos += 1
+                        #obtener contenido de archivo users.txt
+                        with open(path, 'rb+') as archivo:
+                            archivo.seek(ini_archivo)
+                            contenido = archivo.read(pos)
+                        contenido = contenido.decode('utf-8')
+                        lineas = contenido.splitlines()
+                        #info = [ruta_disco, posicion_particion, contenido]
+                        info.append(path)
+                        info.append(ini_archivo)
+                        info.append(contenido)
+                        #verificar si existe usuario
+                        for linea in lineas:
+                            usuario_grupo = linea.strip().split(", ")
+                            if (usuario_grupo[1] == "U"):
+                                if (script.getUser() in usuario_grupo):
+                                    usuario_existe = True
+                                    if (script.getPassword() in usuario_grupo):
+                                        contraseña_correcta = True
+                                    break
+                        if (usuario_existe):
+                            if (contraseña_correcta):
+                                mensajes += '<span style="color: #9A2EFE">¡Bienvenido ' + script.getUser() + '!</span><br>\n'
+                                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Sesion iniciada exitosamente.</span><br>\n'
+                                mensajes += '<span class="text-info">...Comando login ejecutado</span><br>\n'
+                                usuario_actual = script.getUser()
+                            else:
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Contraseña incorrecta.</span><br>\n'
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                        else:
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Usuario no existe.</span><br>\n'
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                    else:
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                else:
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ya hay una sesion activa.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+            else:
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+        else:
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO LOGOUT
     elif (comando.lower() == 'logout'):
@@ -713,84 +726,102 @@ def comando_ejecutar(parametro, valor):
             if (usuario_actual != ""):
                 usuario_actual = ""
                 info.clear()
-                print("¡Sesion cerrada!")
+                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Sesion finalizada exitosamente.</span><br>\n'
+                mensajes += '<span class="text-info">...Comando logout ejecutado</span><br>\n'
             else:
-                print("¡Error! no existe una sesion activa.")
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No hay una sesion activa.</span><br>\n'
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo cerrar sesion.</span><br>\n'
         return None
     #COMANDO MKGRP
     elif (comando.lower() == 'mkgrp'):
         if (parametro.lower() == 'name'):
             script.setName(valor)
         elif (parametro.lower() == 'ejecutar'):
-            if (usuario_actual == "root"):
-                num = 1
-                grupo_existe = False
-                #leer archivo users.txt
-                #info = [ruta_disco, posicion_particion, contenido]
-                contenido = info[2]
-                lineas = contenido.splitlines()
-                for linea in lineas:
-                    usuario_grupo = linea.strip().split(", ")
-                    if (usuario_grupo[1] == "G"):
-                        if (script.getName() in usuario_grupo):
-                            grupo_existe = True
-                            break
-                        else:
-                            num += 1
-                if (not grupo_existe):
-                    #editar archivo users.txt
-                    info[2] = contenido + "\n" + str(num) + ", G, " + script.getName()
-                    #Escribir en archivo users.txt
-                    with open(info[0], 'rb+') as archivo:
-                        archivo.seek(info[1])
-                        archivo.write((info[2]+"$").encode('utf-8'))                   
-                    print("¡Grupo creado exitosamente!")
+            if (script.errors == 0):
+                if (usuario_actual == "root"):
+                    num = 1
+                    grupo_existe = False
+                    #leer archivo users.txt
+                    #info = [ruta_disco, posicion_particion, contenido]
+                    contenido = info[2]
+                    lineas = contenido.splitlines()
+                    for linea in lineas:
+                        usuario_grupo = linea.strip().split(", ")
+                        if (usuario_grupo[1] == "G"):
+                            if (script.getName() in usuario_grupo):
+                                grupo_existe = True
+                                break
+                            else:
+                                num += 1
+                    if (not grupo_existe):
+                        #editar archivo users.txt
+                        info[2] = contenido + "\n" + str(num) + ", G, " + script.getName()
+                        #Escribir en archivo users.txt
+                        with open(info[0], 'rb+') as archivo:
+                            archivo.seek(info[1])
+                            archivo.write((info[2]+"$").encode('utf-8'))                   
+                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Grupo creado exitosamente.</span><br>\n'
+                        mensajes += '<span class="text-info">...Comando mkgrp ejecutado</span><br>\n'
+                    else:
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a crear ya existe.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
+                elif (usuario_actual == ""):
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
                 else:
-                    print("¡Error! el grupo a crear ya existe.")
-            elif (usuario_actual == ""):
-                print("¡Error! ningun usuario ha iniciado sesion.")
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de crear grupos.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
             else:
-                print("¡Error! solo el usuario 'root' tiene permiso de crear grupos.")
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
         else:
-            print("¡Error! parametro no valido.")
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO RMGRP
     elif (comando.lower() == 'rmgrp'):
         if (parametro.lower() == 'name'):
             script.setName(valor)
         elif (parametro.lower() == 'ejecutar'):
-            if (usuario_actual == "root"):
-                cont_editado = ""
-                grupo_existe = False
-                pos = None
-                #leer archivo users.txt
-                #info = [ruta_disco, posicion_particion, contenido]
-                contenido = info[2]
-                lineas = contenido.splitlines()
-                for i, linea in enumerate(lineas):
-                    usuario_grupo = linea.strip().split(", ")
-                    if (usuario_grupo[1] == "G"):
-                        if (script.getName() in usuario_grupo):
-                            cont_editado = "0, " + usuario_grupo[1] + ", " + usuario_grupo[2]
-                            grupo_existe = True
-                            pos = i
-                            break
-                if (grupo_existe):
-                    lineas[pos] = cont_editado
-                    info[2] = "\n".join(lineas)
-                    #Escribir en archivo users.txt
-                    with open(info[0], 'rb+') as archivo:
-                        archivo.seek(info[1])
-                        archivo.write((info[2]+"$").encode('utf-8'))
-                    print("¡Grupo eliminado exitosamente!")               
+            if (script.errors == 0):
+                if (usuario_actual == "root"):
+                    cont_editado = ""
+                    grupo_existe = False
+                    pos = None
+                    #leer archivo users.txt
+                    #info = [ruta_disco, posicion_particion, contenido]
+                    contenido = info[2]
+                    lineas = contenido.splitlines()
+                    for i, linea in enumerate(lineas):
+                        usuario_grupo = linea.strip().split(", ")
+                        if (usuario_grupo[1] == "G"):
+                            if (script.getName() in usuario_grupo):
+                                cont_editado = "0, " + usuario_grupo[1] + ", " + usuario_grupo[2]
+                                grupo_existe = True
+                                pos = i
+                                break
+                    if (grupo_existe):
+                        lineas[pos] = cont_editado
+                        info[2] = "\n".join(lineas)
+                        #Escribir en archivo users.txt
+                        with open(info[0], 'rb+') as archivo:
+                            archivo.seek(info[1])
+                            archivo.write((info[2]+"$").encode('utf-8'))
+                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Grupo eliminado exitosamente.</span><br>\n'
+                        mensajes += '<span class="text-info">...Comando rmgrp ejecutado</span><br>\n'
+                    else:
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a eliminar no existe.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
+                elif (usuario_actual == ""):
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
                 else:
-                    print("¡Error! el grupo a eliminar no existe")
-            elif (usuario_actual == ""):
-                print("¡Error! ningun usuario ha iniciado sesion.")
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de eliminar grupos.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
             else:
-                print("¡Error! solo el usuario 'root' tiene permiso de eliminar grupos.")
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
         else:
-            print("¡Error! parametro no valido.")
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMAND MKUSR
     elif (comando.lower() == 'mkusr'):
@@ -801,8 +832,8 @@ def comando_ejecutar(parametro, valor):
         elif (parametro.lower() == 'grp'):
             script.setGrp(valor)
         elif (parametro.lower() == 'ejecutar'):
-            if (usuario_actual == 'root'):
-                if (script.errors == 0):
+            if (script.errors == 0):
+                if (usuario_actual == 'root'):
                     usuario_existe = False
                     grupo_existe = False
                     pos = None
@@ -826,58 +857,72 @@ def comando_ejecutar(parametro, valor):
                             #Escribir en archivo users.txt
                             with open(info[0], 'rb+') as archivo:
                                 archivo.seek(info[1])
-                                archivo.write((info[2]+"$").encode('utf-8'))                   
-                            print("¡Usuario creado exitosamente!")
+                                archivo.write((info[2]+"$").encode('utf-8'))
+                            mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Usuario creado exitosamente.</span><br>\n'
+                            mensajes += '<span class="text-info">...Comando mkusr ejecutado</span><br>\n'            
                         else:
-                            print("¡Error! el usuario a crear ya existe.")
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a crear ya existe.</span><br>\n'
+                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
                     else:
-                        print("¡Error! el grupo no existe.")
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo no existe.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
+                elif (usuario_actual == ""):
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
                 else:
-                    print('¡Error! no se pudo crear el usuario.')
-            elif (usuario_actual == ""):
-                print("¡Error! ningun usuario ha iniciado sesion.")
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de crear usuarios.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
             else:
-                print("¡Error! solo el usuario 'root' tiene permiso de crear usuarios.")
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
         else:
-            print("¡Error! parametro no valido.")
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO RMUSR
     elif (comando.lower() == 'rmusr'):
         if (parametro.lower() == 'user'):
             script.setUser(valor)
         elif (parametro.lower() == 'ejecutar'):
-            if (usuario_actual == "root"):
-                cont_editado = ""
-                usuario_existe = False
-                pos = None
-                #leer archivo users.txt
-                #info = [ruta_disco, posicion_particion, contenido]
-                contenido = info[2]
-                lineas = contenido.splitlines()
-                for i, linea in enumerate(lineas):
-                    usuario_grupo = linea.strip().split(", ")
-                    if (usuario_grupo[1] == "U"):
-                        if (script.getUser() in usuario_grupo):
-                            cont_editado = "0, " + "U, " + usuario_grupo[2] + ", " + usuario_grupo[3] + ", " + usuario_grupo[4]
-                            usuario_existe = True
-                            pos = i
-                            break
-                if (usuario_existe):
-                    lineas[pos] = cont_editado
-                    info[2] = "\n".join(lineas)
-                    #Escribir en archivo users.txt
-                    with open(info[0], 'rb+') as archivo:
-                        archivo.seek(info[1])
-                        archivo.write((info[2]+"$").encode('utf-8'))
-                    print("¡Usuario eliminado exitosamente!")
+            if (script.errors == 0):
+                if (usuario_actual == "root"):
+                    cont_editado = ""
+                    usuario_existe = False
+                    pos = None
+                    #leer archivo users.txt
+                    #info = [ruta_disco, posicion_particion, contenido]
+                    contenido = info[2]
+                    lineas = contenido.splitlines()
+                    for i, linea in enumerate(lineas):
+                        usuario_grupo = linea.strip().split(", ")
+                        if (usuario_grupo[1] == "U"):
+                            if (script.getUser() in usuario_grupo):
+                                cont_editado = "0, " + "U, " + usuario_grupo[2] + ", " + usuario_grupo[3] + ", " + usuario_grupo[4]
+                                usuario_existe = True
+                                pos = i
+                                break
+                    if (usuario_existe):
+                        lineas[pos] = cont_editado
+                        info[2] = "\n".join(lineas)
+                        #Escribir en archivo users.txt
+                        with open(info[0], 'rb+') as archivo:
+                            archivo.seek(info[1])
+                            archivo.write((info[2]+"$").encode('utf-8'))
+                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Usuario eliminado exitosamente.</span><br>\n'
+                        mensajes += '<span class="text-info">...Comando rmusr ejecutado</span><br>\n'   
+                    else:
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a eliminar no existe.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
+                elif (usuario_actual == ""):
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
                 else:
-                    print("¡Error! el usuario a eliminar no existe")
-            elif (usuario_actual == ""):
-                print("¡Error! ningun usuario ha iniciado sesion.")
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de eliminar usuarios.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
             else:
-                print("¡Error! solo el usuario 'root' tiene permiso de eliminar usuarios.")
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
         else:
-            print("¡Error! parametro no valido.")
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO MKFILE
     elif (comando.lower() == 'mkfile'):
@@ -890,6 +935,7 @@ def comando_ejecutar(parametro, valor):
         elif (parametro.lower() == 'cont'):
             script.setCont(valor)
         elif ('ejecutar'):
+            mensajes += script.mensajes
             if script.errors == 0:
                 if (usuario_actual != ""):
                     if (script.getR()):
@@ -909,7 +955,8 @@ def comando_ejecutar(parametro, valor):
                                     contenido = archivo.read()
                             with open(script.getPath(), "w") as archivo:
                                 archivo.write(contenido)
-                            print("Archivo creado exitosamente")
+                            mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
+                            mensajes += '<span class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                         else:
                             respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (s/n)")
                             if (respuesta == "s"):
@@ -942,9 +989,11 @@ def comando_ejecutar(parametro, valor):
                                         contenido = archivo.read()
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
-                                print("Archivo creado exitosamente")
+                                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
+                                mensajes += '<span class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                             else:
-                                print("¡Error! la ruta de carpetas no existe.")
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La ruta de carpetas no existe.</span><br>\n'
+                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
                         else:
                             respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (s/n)")
                             if (respuesta == "s"):
@@ -962,11 +1011,13 @@ def comando_ejecutar(parametro, valor):
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
                 else:
-                    print("¡Error! ningun usuario ha iniciado sesion.")
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
             else:
-                print('¡Error! no se pudo crear el archivo.')
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
         else:
-            print("¡Error! parametro no valido.")
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO MKDIR
     elif (comando.lower() == 'mkdir'):
@@ -975,18 +1026,28 @@ def comando_ejecutar(parametro, valor):
         elif (parametro.lower() == 'r'):
             script.setR(True)
         elif (parametro.lower() == 'ejecutar'):
-            if (script.getR()):
-                try:
-                    os.makedirs(script.getPath())
-                except FileNotFoundError as ex:
-                    print(ex)
+            if script.errors == 0:
+                if (script.getR()):
+                    try:
+                        os.makedirs(script.getPath())
+                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span class="text-info">...Comando mkdir ejecutado</span><br>\n'  
+                    except FileNotFoundError as ex:
+                        print(ex)
+                else:
+                    try:
+                        os.mkdir(script.getPath())
+                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span class="text-info">...Comando mkdir ejecutado</span><br>\n'
+                    except FileNotFoundError as ex:
+                        print(ex)
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La ruta de carpetas no existe.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
             else:
-                try:
-                    os.mkdir(script.getPath())
-                except FileNotFoundError as ex:
-                    print(ex)
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
         else:
-            print("¡Error! parametro no valido.")
+            script.errors += 1
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO PAUSE
     elif (comando.lower() == 'pause'):
@@ -1016,16 +1077,16 @@ def comando_ejecutar(parametro, valor):
     #COMANDO REP
     elif (comando.lower() == "rep"):
         if (parametro.lower() == "name"):
-            print("leyendo nombre del reporte...")
+            mensajes += '<span class="text-white">leyendo nombre del reporte...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == "path"):
-            print("leyendo ruta del reporte...")
+            mensajes += '<span class="text-white">leyendo ruta del reporte...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == "id"):
-            print("leyendo id de la particion...")
+            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
             script.setId(valor)
         elif (parametro.lower() == "ruta"):
-            print("leyendo ruta del reporte...")
+            mensajes += '<span class="text-white">leyendo ruta del reporte...</span><br>\n'
             script.setRuta(valor)
         elif (parametro.lower() == "ejecutar"):
             if (script.errors == 0):
@@ -1036,11 +1097,12 @@ def comando_ejecutar(parametro, valor):
                         name_part = particiones_montadas[script.getId()][0]
                         path = particiones_montadas[script.getId()][1]
                     else:
-                        print("\033[91m<<Error>> {}\033[00m" .format("La particion no esta montada."))
-                        print("\033[91m<<Error>> {}\033[00m" .format("No se pudo generar el reporte."))
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
                         return None
                 if not(os.path.exists(path)):
-                    print("¡el disco no existe!")
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El disco no existe.</span><br>\n'
+                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
                     return None
                 if (script.getName().lower() == "file"):
                     #obtener mbr
@@ -1094,7 +1156,8 @@ def comando_ejecutar(parametro, valor):
                                         ebr = ebr.unpack_data(contenido)
                     #verificar si existe la particion
                     if part_formateada == None:
-                        print("No se encontro la particion")
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se encontro la particion.</span><br>\n'
+                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
                         return None
                     #generar reporte
                     generarReporteArchivo(path, part_formateada, script.getRuta(), script.getPath())                    
@@ -1102,16 +1165,17 @@ def comando_ejecutar(parametro, valor):
                     generarReporteMBR(path, script.getPath())
                 elif (script.getName().lower() == "disk"):
                     generarReporteDisco(path, script.getPath())
-                print("\033[1;32m<<Success>> {}\033[00m" .format("Reporte generado exitosamente."))
+                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Reporte generado exitosamente.</span><br>\n'
                 mensajes += '<span class="text-info">...Comando rep ejecutado</span><br>\n'
-            if (script.errors != 0):
-                print("\033[91m<<Error>> {}\033[00m" .format("No se pudo generar el reporte."))
+                return None
+            else:
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
         else:
             script.errors += 1
-            print("\033[91m<<Error>> {}\033[00m" .format("Parametro no valido."))
+            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     elif (comando[0] == "#"):
-        print("\033[90m<<Comment>> {}\033[00m".format(comando[1:]))
+        mensajes += '<span class="text-secondary">' + comando[1:] + '</span><br>\n'
         return None
 
 #FUNCIONES
@@ -1392,6 +1456,7 @@ def generarReporteDisco(path, pathReport):
     subprocess.run(command, check=True)
 
 def generarReporteArchivo(path, part_formateada, ruta, pathReport):
+    global mensajes
     if ruta == '"/users.txt"':
         #obtener inicio de archivos users.txt
         ini_archivo = part_formateada.getPart_start()
@@ -1399,8 +1464,9 @@ def generarReporteArchivo(path, part_formateada, ruta, pathReport):
         with open(path, 'rb+') as archivo:
             archivo.seek(ini_archivo)
             byte = archivo.read(1)
-            if byte == b'\x00':
-                print(f"La particion {part_formateada.getPart_name()} no esta formateada")
+            if byte == b'\x00':          
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ' + part_formateada.getPart_name() + 'no esta formateada.</span><br>\n'
+                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                 return None
         #obtener longitud de archivo users.txt
         pos = 0
@@ -1421,8 +1487,6 @@ def generarReporteArchivo(path, part_formateada, ruta, pathReport):
         #crear reporte
         with open(pathReport, 'w') as archivo:
             archivo.write(contenido)
-        print(pathReport)
-        print(contenido)
     else:
         pass
 

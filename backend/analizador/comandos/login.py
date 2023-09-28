@@ -1,10 +1,9 @@
-import struct
-
 class Login:
     def __init__(self, user = "", password = "", id = ""):
         self.user = user
         self.password = password
         self.id = id
+        self.errors = 0
 
     #SET
     def setUser(self, user):

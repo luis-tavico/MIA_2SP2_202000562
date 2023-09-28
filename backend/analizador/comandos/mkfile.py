@@ -7,6 +7,7 @@ class Mkfile:
         self.size = size
         self.cont = cont
         self.username = os.getlogin()
+        self.mensajes = ""
         self.errors = 0
 
     #SET
@@ -22,7 +23,7 @@ class Mkfile:
     def setCont(self, cont):
         self.cont = cont.replace("user", self.username).replace('"', "")
         if not(os.path.exists(self.cont)):
-            print("¡Error! el archivo no existe.")
+            self.mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El archivo no existe.</span><br>\n'
             self.errors += 1
 
     #GET

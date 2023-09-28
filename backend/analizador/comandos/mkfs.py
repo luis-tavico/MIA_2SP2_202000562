@@ -3,6 +3,7 @@ class Mkfs:
     def __init__(self, id = "", type = "full"):
         self.id = id
         self.type = type
+        self.errors = 0
 
     #SET
     def setId(self, id):

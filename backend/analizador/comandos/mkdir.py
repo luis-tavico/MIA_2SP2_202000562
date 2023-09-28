@@ -5,7 +5,8 @@ class Mkdir:
         self.path = path
         self.r = r
         self.username = os.getlogin()
-
+        self.errors = 0
+        
     #SET
     def setPath(self, path):
         self.path = path.replace("user", self.username).replace('"', "")

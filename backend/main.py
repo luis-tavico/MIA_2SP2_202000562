@@ -1,7 +1,6 @@
 from analizador.gramatica import *
 
 #execute -path="/home/luis_tavico/Escritorio/ArchivosdeEntrada2S2023/Archivos de Prueba/prueba-1.adsj"
-#execute -path="/home/luis_tavico/Escritorio/ArchivosdeEntrada2S2023/Archivos de Prueba/prueba.adsj"
 #sudo rm -r '/home/luis_tavico/Escritorio/mis discos'
 
 if __name__ == '__main__':
