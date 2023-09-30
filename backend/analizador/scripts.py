@@ -25,82 +25,86 @@ from analizador.comandos.rmusr import Rmusr
 from analizador.comandos.superBloque import SuperBloque
 from analizador.comandos.unmount import Unmount
 
-global comando, script, particiones_montadas, usuario_actual, info, mensajes
+global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile
 particiones_montadas = {}
 usuario_actual = ""
 info = []
 mensajes = ""
+respuesta = "None"
+pregunta = False
+mensajes_rmdisk = ""
+mensajes_mkfile = ""
 
 def comando_activar(valor):
-    global comando, script, mensajes
+    global comando, script, mensajes, mensajes_rmdisk, mensajes_mkfile
     comando = valor
 
     #comandos de discos
     if (comando.lower() == "mkdisk"):
         script = Mkdisk()
-        mensajes += '<span class="text-info">Ejecutando comando mkdisk...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando mkdisk...</span><br>\n'
     elif (comando.lower() == "rmdisk"):
         script = Rmdisk()
-        mensajes += '<span class="text-info">Ejecutando comando rmdisk...</span><br>\n'
+        mensajes_rmdisk += '<span contentEditable="false" class="text-info">Ejecutando comando rmdisk...</span><br>\n'
     elif (comando.lower() == "fdisk"):
         script = Fdisk()
-        mensajes += '<span class="text-info">Ejecutando comando fdisk...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando fdisk...</span><br>\n'
     elif (comando.lower() == "mount"):
         script = Mount()
-        mensajes += '<span class="text-info">Ejecutando comando mount...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando mount...</span><br>\n'
     elif (comando.lower() == "unmount"):
         script = Unmount()
-        mensajes += '<span class="text-info">Ejecutando comando unmount...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando unmount...</span><br>\n'
     elif (comando.lower() == "mkfs"):
         script = Mkfs()
-        mensajes += '<span class="text-info">Ejecutando comando mkfs...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando mkfs...</span><br>\n'
     #comandos de usuarios y grupos
     elif (comando.lower() == "login"):
         script = Login()
-        mensajes += '<span class="text-info">Ejecutando comando login...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando login...</span><br>\n'
     elif (comando.lower() == "logout"):
-        mensajes += '<span class="text-info">Ejecutando comando logout...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando logout...</span><br>\n'
     elif (comando.lower() == "mkgrp"):
         script = Mkgrp()
-        mensajes += '<span class="text-info">Ejecutando comando mkgrp...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando mkgrp...</span><br>\n'
     elif (comando.lower() == "rmgrp"):
         script = Rmgrp()
-        mensajes += '<span class="text-info">Ejecutando comando rmgrp...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando rmgrp...</span><br>\n'
     elif (comando.lower() == "mkusr"):
         script = Mkusr()
-        mensajes += '<span class="text-info">Ejecutando comando mkusr...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando mkusr...</span><br>\n'
     elif (comando.lower() == "rmusr"):
         script = Rmusr()
-        mensajes += '<span class="text-info">Ejecutando comando rmusr...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando rmusr...</span><br>\n'
     #comandos de archivos y permisos
     elif (comando.lower() == "mkfile"):
         script = Mkfile()
-        mensajes += '<span class="text-info">Ejecutando comando mkfile...</span><br>\n'
+        mensajes_mkfile += '<span contentEditable="false" class="text-info">Ejecutando comando mkfile...</span><br>\n'
     elif (comando.lower() == "mkdir"):
         script = Mkdir()
-        mensajes += '<span class="text-info">Ejecutando comando mkdir...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando mkdir...</span><br>\n'
     elif (comando.lower() == "execute"):
         script = Execute()
-        mensajes += '<span class="text-info">Ejecutando comando execute...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando execute...</span><br>\n'
     elif (comando.lower() == "rep"):
         script = Rep()
-        mensajes += '<span class="text-info">Ejecutando comando rep...</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando rep...</span><br>\n'
 
 def comando_ejecutar(parametro, valor):
-    global comando, script, particiones_montadas, usuario_actual, info, mensajes
+    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile
     #COMANDO MKDISK
     if (comando.lower() == "mkdisk"):
         if (parametro.lower() == 'size'):
-            mensajes += '<span class="text-white">leyendo tamaño del disco...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo tamaño del disco...</span><br>\n'
             script.setSize(int(valor))
         elif (parametro.lower() == 'path'):
-            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'fit'):
-            mensajes += '<span class="text-white">leyendo ajuste del disco...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ajuste del disco...</span><br>\n'
             script.setFit(valor)
         elif (parametro.lower() == 'unit'):
-            mensajes += '<span class="text-white">leyendo unidad del disco...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo unidad del disco...</span><br>\n'
             script.setUnit(valor)
         elif (parametro.lower() == "ejecutar"):
             mensajes += script.mensajes
@@ -131,50 +135,66 @@ def comando_ejecutar(parametro, valor):
                         archivo.seek(pos)
                         archivo.write(particion.pack_data())
                     pos += particion.getLength()
-                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Disco creado exitosamente.</span><br>\n'
-                mensajes += '<span class="text-info">...Comando mkdisk ejecutado</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Disco creado exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-info">...Comando mkdisk ejecutado</span><br>\n'
             else: 
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el disco.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el disco.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO RMDISK
     elif (comando.lower() == "rmdisk"):
         if (parametro.lower() == 'path'):
-            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
+            mensajes_rmdisk += '<span contentEditable="false" class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'ejecutar'):
-            mensajes += script.mensajes
+            mensajes_rmdisk += script.mensajes
+            if not pregunta:
+                mensajes += mensajes_rmdisk
+                mensajes_rmdisk = ""
             if (script.errors == 0):
-                os.remove(script.getPath())
-                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Disco eliminado exitosamente.</span><br>\n'
-                mensajes += '<span class="text-info">...Comando rmdisk ejecutado</span><br>\n'
+                if respuesta == "s":
+                    os.remove(script.getPath())
+                    pregunta = False
+                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Disco eliminado exitosamente.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-info">...Comando rmdisk ejecutado</span><br>\n'
+                    respuesta = "None"
+                    return None
+                elif respuesta == "n":
+                    pregunta = False
+                    mensajes += '<span contentEditable="false" class="text-info">...Comando rmdisk ejecutado</span><br>\n'
+                    respuesta = "None"
+                    return None
+                else:
+                    pregunta = True
+                    mensajes += '<span contentEditable="false" class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> ¿Desea eliminar el disco? (s/n)&nbsp;</span><br>'
+                    return "confirmacion"
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el disco.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el disco.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO FDISK
     elif (comando.lower() == 'fdisk'):
         if (parametro.lower() == 'size'):
-            mensajes += '<span class="text-white">leyendo tamaño de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo tamaño de la particion...</span><br>\n'
             script.setSize(int(valor))
         elif (parametro.lower() == 'path'):
-            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'name'):
-            mensajes += '<span class="text-white">leyendo nombre de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre de la particion...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == 'unit'):
-            mensajes += '<span class="text-white">leyendo unidad de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo unidad de la particion...</span><br>\n'
             script.setUnit(valor)
         elif(parametro.lower() == 'type'):
-            mensajes += '<span class="text-white">leyendo tipo de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo tipo de la particion...</span><br>\n'
             script.setType(valor)
         elif(parametro.lower() == 'fit'):
-            mensajes += '<span class="text-white">leyendo ajuste de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ajuste de la particion...</span><br>\n'
             script.setFit(valor)
         elif (parametro.lower() == 'ejecutar'):
             mensajes += script.mensajes
@@ -198,15 +218,15 @@ def comando_ejecutar(parametro, valor):
                 #verificar si nombre existe
                 for partition in mbr.getPartitions():
                     if (partition.getPart_name().rstrip("\x00") == script.getName()):
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "name" ya existe.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "name" ya existe.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                         return None
                 #verificar tipo de particion
                 if (script.getType().lower() == "e"):
                     for partition in mbr.getPartitions():
                         if (partition.getPart_type().lower() == "e"):
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ya existe una particion extendida.</span><br>\n'
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ya existe una particion extendida.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                             return None
                 elif (script.getType().lower() == "l"):
                     extendida_existe = False
@@ -215,8 +235,8 @@ def comando_ejecutar(parametro, valor):
                             extendida_existe = True
                             break
                     if not(extendida_existe):
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No existe una particion extendida.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No existe una particion extendida.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                         return None
                 #convertir tamaño a bytes
                 size = 0
@@ -290,20 +310,20 @@ def comando_ejecutar(parametro, valor):
                             with open(script.getPath(), 'rb+') as archivo:
                                 archivo.seek(inicio)
                                 archivo.write(ebr.pack_data())
-                            mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
-                            mensajes += '<span class="text-info">...Comando fdisk ejecutado</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-info">...Comando fdisk ejecutado</span><br>\n'
                             return None
                         else:
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                             return None
                     else:
                         puntero = inicio
                         tam_disp = particion_extendida.getPart_s() - (ebr.getLength() + ebr.getPart_s())
                         while True:
                             if (ebr.getPart_name().rstrip("\x00") == script.getName()):                              
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "name" ya existe.</span><br>\n'
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El valor del parametro "name" ya existe.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                                 return None
                             if (ebr.getPart_next() == -1):
                                 if (tam_disp > (size + 32)):
@@ -324,12 +344,12 @@ def comando_ejecutar(parametro, valor):
                                     with open(script.getPath(), 'rb+') as archivo:
                                         archivo.seek(puntero)
                                         archivo.write(ebr.pack_data())
-                                    mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
-                                    mensajes += '<span class="text-info">...Comando fdisk ejecutado</span><br>\n'
+                                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                                    mensajes += '<span contentEditable="false" class="text-info">...Comando fdisk ejecutado</span><br>\n'
                                     return None
                                 else:
-                                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
-                                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
+                                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                                     return None
                             else:
                                 puntero += ebr.getLength() + ebr.getPart_s() 
@@ -351,8 +371,8 @@ def comando_ejecutar(parametro, valor):
                     mbr.getPartitions()[pos_particion].setPart_fit(script.getFit()[0])
                     mbr.getPartitions()[pos_particion].setPart_start(pos_en_disco)
                     if (size > tam_disp):
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Espacio insuficiente en disco.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                         return None
                     mbr.getPartitions()[pos_particion].setPart_s(size)     
                     mbr.getPartitions()[pos_particion].setPart_name(script.getName())
@@ -372,26 +392,26 @@ def comando_ejecutar(parametro, valor):
                         with open(script.getPath(), 'rb+') as archivo:
                             archivo.seek(pos_en_disco)
                             archivo.write(ebr.pack_data())
-                    mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
-                    mensajes += '<span class="text-info">...Comando fdisk ejecutado</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-info">...Comando fdisk ejecutado</span><br>\n'
                     return None
                 else:
                     script.errors += 1
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Las 4 particiones permitidas, ya han sido usadas.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Las 4 particiones permitidas, ya han sido usadas.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
                     return None
             if (script.errors != 0):
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la particion.</span><br>\n'
         else:
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #cOMANDO MOUNT
     elif (comando.lower() == 'mount'):
         if (parametro.lower() == 'path'):
-            mensajes += '<span class="text-white">leyendo ruta del disco...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ruta del disco...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'name'):
-            mensajes += '<span class="text-white">leyendo nombre de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre de la particion...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == 'ejecutar'):
             mensajes += script.mensajes
@@ -454,47 +474,47 @@ def comando_ejecutar(parametro, valor):
 
                 if (num_particion == ""):
                     script.errors += 1
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no existe.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no existe.</span><br>\n'
                 else:
                     id = "62" + num_particion + os.path.splitext(os.path.basename(script.getPath()))[0]
                     if not(id in particiones_montadas):   
                         particiones_montadas[id] = [script.getName(), script.getPath()]
-                        mensajes += '<span style="color: #9A2EFE">Particiones montadas:</span><br>\n'
+                        mensajes += '<span contentEditable="false" style="color: #9A2EFE">Particiones montadas:</span><br>\n'
                         for clave, valor in particiones_montadas.items():
-                            mensajes += '<span style="color: #9A2EFE">' + clave + '</span><br>\n'
-                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion montada exitosamente.</span><br>\n'
-                        mensajes += '<span class="text-info">...Comando mount ejecutado</span><br>\n'
+                            mensajes += '<span contentEditable="false" style="color: #9A2EFE">' + clave + '</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion montada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando mount ejecutado</span><br>\n'
                     else:
                         script.errors += 1
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ya esta montada.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ya esta montada.</span><br>\n'
             if (script.errors != 0):
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo montar la particion.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo montar la particion.</span><br>\n'
         else:
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO UNMOUNT
     elif (comando.lower() == 'unmount'):
         if (parametro.lower() == 'id'):
-            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo id de la particion...</span><br>\n'
             script.setId(valor)
         elif (parametro.lower() == 'ejecutar'):
             if script.getId() in particiones_montadas:   
                 particiones_montadas.pop(script.getId())
-                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion desmontada exitosamente.</span><br>\n'
-                mensajes += '<span class="text-info">...Comando unmount ejecutado</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion desmontada exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-info">...Comando unmount ejecutado</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo desmontar la particion.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo desmontar la particion.</span><br>\n'
         else:
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO MKFS
     elif (comando.lower() == 'mkfs'):
         if (parametro.lower() == 'id'):
-            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo id de la particion...</span><br>\n'
             script.setId(valor)
         elif (parametro.lower() == 'type'):
-            mensajes += '<span class="text-white">leyendo tipo de formateo...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo tipo de formateo...</span><br>\n'
             script.setType(valor)
         elif (parametro.lower() == 'ejecutar'):
             if (script.errors == 0):
@@ -566,29 +586,29 @@ def comando_ejecutar(parametro, valor):
                         archivo.seek(part_formatear.getPart_start())
                         contenido = ('1, G, root\n1, U, root, root, 123$').encode('utf-8')
                         archivo.write(contenido)
-                    mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Particion formateada exitosamente.</span><br>\n'
-                    mensajes += '<span class="text-info">...Comando mkfs ejecutado</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion formateada exitosamente.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-info">...Comando mkfs ejecutado</span><br>\n'
                     return None
                     #####
                 else:
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no existe.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo formatear la particion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no existe.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo formatear la particion.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo formatear la particion.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo formatear la particion.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO LOGIN
     elif (comando.lower() == 'login'):
         if (parametro.lower() == 'user'):
-            mensajes += '<span class="text-white">leyendo nombre del usuario...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre del usuario...</span><br>\n'
             script.setUser(valor)
         elif (parametro.lower() == 'pass'):
-            mensajes += '<span class="text-white">leyendo contraseña del usuario...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo contraseña del usuario...</span><br>\n'
             script.setPassword(valor)
         elif (parametro.lower() == 'id'):
-            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo id de la particion...</span><br>\n'
             script.setId(valor)
         elif(parametro.lower() == 'ejecutar'):
             if (script.errors == 0):
@@ -600,8 +620,8 @@ def comando_ejecutar(parametro, valor):
                         name_part = particiones_montadas[script.getId()][0]
                         path = particiones_montadas[script.getId()][1]
                         if not(os.path.exists(path)):
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El disco no existe.</span><br>\n'
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El disco no existe.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                             return None
                         #obtener mbr
                         mbr = Mbr()
@@ -654,8 +674,8 @@ def comando_ejecutar(parametro, valor):
                                             ebr = ebr.unpack_data(contenido)
                         #obtener inicio de archivos users.txt
                         if part_formateada == None:
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se encontro la particion.</span><br>\n'
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se encontro la particion.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                             return None
                         ini_archivo = part_formateada.getPart_start()
                         #verificar si esta formateada la particion
@@ -663,8 +683,8 @@ def comando_ejecutar(parametro, valor):
                             archivo.seek(ini_archivo)
                             byte = archivo.read(1)
                             if byte == b'\x00':
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ' + part_formateada.getPart_name() + 'no esta formateada.</span><br>\n'
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ' + part_formateada.getPart_name() + 'no esta formateada.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                                 return None
                         #obtener longitud de archivo users.txt
                         pos = 0
@@ -698,27 +718,27 @@ def comando_ejecutar(parametro, valor):
                                     break
                         if (usuario_existe):
                             if (contraseña_correcta):
-                                mensajes += '<span style="color: #9A2EFE">¡Bienvenido ' + script.getUser() + '!</span><br>\n'
-                                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Sesion iniciada exitosamente.</span><br>\n'
-                                mensajes += '<span class="text-info">...Comando login ejecutado</span><br>\n'
+                                mensajes += '<span contentEditable="false" style="color: #9A2EFE">¡Bienvenido ' + script.getUser() + '!</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Sesion iniciada exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-info">...Comando login ejecutado</span><br>\n'
                                 usuario_actual = script.getUser()
                             else:
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Contraseña incorrecta.</span><br>\n'
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Contraseña incorrecta.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                         else:
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Usuario no existe.</span><br>\n'
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Usuario no existe.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                     else:
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                 else:
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ya hay una sesion activa.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ya hay una sesion activa.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO LOGOUT
     elif (comando.lower() == 'logout'):
@@ -726,15 +746,16 @@ def comando_ejecutar(parametro, valor):
             if (usuario_actual != ""):
                 usuario_actual = ""
                 info.clear()
-                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Sesion finalizada exitosamente.</span><br>\n'
-                mensajes += '<span class="text-info">...Comando logout ejecutado</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Sesion finalizada exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-info">...Comando logout ejecutado</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No hay una sesion activa.</span><br>\n'
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo cerrar sesion.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No hay una sesion activa.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo cerrar sesion.</span><br>\n'
         return None
     #COMANDO MKGRP
     elif (comando.lower() == 'mkgrp'):
         if (parametro.lower() == 'name'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre del grupo...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == 'ejecutar'):
             if (script.errors == 0):
@@ -760,26 +781,27 @@ def comando_ejecutar(parametro, valor):
                         with open(info[0], 'rb+') as archivo:
                             archivo.seek(info[1])
                             archivo.write((info[2]+"$").encode('utf-8'))                   
-                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Grupo creado exitosamente.</span><br>\n'
-                        mensajes += '<span class="text-info">...Comando mkgrp ejecutado</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Grupo creado exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando mkgrp ejecutado</span><br>\n'
                     else:
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a crear ya existe.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a crear ya existe.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
                 elif (usuario_actual == ""):
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
                 else:
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de crear grupos.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de crear grupos.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el grupo.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO RMGRP
     elif (comando.lower() == 'rmgrp'):
         if (parametro.lower() == 'name'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre del grupo...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == 'ejecutar'):
             if (script.errors == 0):
@@ -806,30 +828,33 @@ def comando_ejecutar(parametro, valor):
                         with open(info[0], 'rb+') as archivo:
                             archivo.seek(info[1])
                             archivo.write((info[2]+"$").encode('utf-8'))
-                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Grupo eliminado exitosamente.</span><br>\n'
-                        mensajes += '<span class="text-info">...Comando rmgrp ejecutado</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Grupo eliminado exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando rmgrp ejecutado</span><br>\n'
                     else:
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a eliminar no existe.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a eliminar no existe.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
                 elif (usuario_actual == ""):
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
                 else:
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de eliminar grupos.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de eliminar grupos.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el grupo.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMAND MKUSR
     elif (comando.lower() == 'mkusr'):
         if (parametro.lower() == 'user'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre del usuario...</span><br>\n'
             script.setUser(valor)
         elif (parametro.lower() == 'pass'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo contraseña del usuario...</span><br>\n'
             script.setPassword(valor)
         elif (parametro.lower() == 'grp'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo grupo del usuario...</span><br>\n'
             script.setGrp(valor)
         elif (parametro.lower() == 'ejecutar'):
             if (script.errors == 0):
@@ -858,29 +883,30 @@ def comando_ejecutar(parametro, valor):
                             with open(info[0], 'rb+') as archivo:
                                 archivo.seek(info[1])
                                 archivo.write((info[2]+"$").encode('utf-8'))
-                            mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Usuario creado exitosamente.</span><br>\n'
-                            mensajes += '<span class="text-info">...Comando mkusr ejecutado</span><br>\n'            
+                            mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Usuario creado exitosamente.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-info">...Comando mkusr ejecutado</span><br>\n'            
                         else:
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a crear ya existe.</span><br>\n'
-                            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a crear ya existe.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
                     else:
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo no existe.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo no existe.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
                 elif (usuario_actual == ""):
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
                 else:
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de crear usuarios.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de crear usuarios.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el usuario.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO RMUSR
     elif (comando.lower() == 'rmusr'):
         if (parametro.lower() == 'user'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre del usuario...</span><br>\n'
             script.setUser(valor)
         elif (parametro.lower() == 'ejecutar'):
             if (script.errors == 0):
@@ -907,35 +933,41 @@ def comando_ejecutar(parametro, valor):
                         with open(info[0], 'rb+') as archivo:
                             archivo.seek(info[1])
                             archivo.write((info[2]+"$").encode('utf-8'))
-                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Usuario eliminado exitosamente.</span><br>\n'
-                        mensajes += '<span class="text-info">...Comando rmusr ejecutado</span><br>\n'   
+                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Usuario eliminado exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando rmusr ejecutado</span><br>\n'   
                     else:
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a eliminar no existe.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a eliminar no existe.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
                 elif (usuario_actual == ""):
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
                 else:
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de eliminar usuarios.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Solo el usuario "root" tiene permiso de eliminar usuarios.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO MKFILE
     elif (comando.lower() == 'mkfile'):
         if (parametro.lower() == 'path'):
+            mensajes_mkfile += '<span contentEditable="false" class="text-white">leyendo ruta del archivo...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'r'):
+            mensajes_mkfile += '<span contentEditable="false" class="text-white">leyendo parametro r...</span><br>\n'
             script.setR(True)
         elif (parametro.lower() == 'size'):
+            mensajes_mkfile += '<span contentEditable="false" class="text-white">leyendo tamaño del archivo...</span><br>\n'
             script.setSize(int(valor))
         elif (parametro.lower() == 'cont'):
+            mensajes_mkfile += '<span contentEditable="false" class="text-white">leyendo contenido del archivo...</span><br>\n'
             script.setCont(valor)
         elif ('ejecutar'):
-            mensajes += script.mensajes
+            mensajes_mkfile += script.mensajes
+            if not pregunta:
+                mensajes += mensajes_mkfile
             if script.errors == 0:
                 if (usuario_actual != ""):
                     if (script.getR()):
@@ -955,12 +987,11 @@ def comando_ejecutar(parametro, valor):
                                     contenido = archivo.read()
                             with open(script.getPath(), "w") as archivo:
                                 archivo.write(contenido)
-                            mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
-                            mensajes += '<span class="text-info">...Comando mkfile ejecutado</span><br>\n'   
+                            mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                         else:
-                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (s/n)")
-                            if (respuesta == "s"):
-                                #pendiente                       
+                            if respuesta == "s":
+                                #Revisar mas tarde
                                 contenido = ""
                                 if (script.getSize() != 0):
                                     num = 0
@@ -973,6 +1004,19 @@ def comando_ejecutar(parametro, valor):
                                         contenido = archivo.read()
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
+                                pregunta = False
+                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo editado exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
+                                respuesta = "None"
+                                return None
+                            elif respuesta == "n":
+                                pregunta = False
+                                respuesta = "None"
+                                return None
+                            else:
+                                pregunta = True
+                                mensajes += '<span contentEditable="false" class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> El archivo ya existe, ¿Desea sobreescribirlo? (s/n)&nbsp;</span><br>'
+                                return "confirmacion"
                     else:
                         carpetas = os.path.dirname(script.getPath())
                         if (not os.path.exists(script.getPath())):
@@ -989,15 +1033,14 @@ def comando_ejecutar(parametro, valor):
                                         contenido = archivo.read()
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
-                                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
-                                mensajes += '<span class="text-info">...Comando mkfile ejecutado</span><br>\n'   
+                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                             else:
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La ruta de carpetas no existe.</span><br>\n'
-                                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La ruta de carpetas no existe.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
                         else:
-                            respuesta = input("El archivo ya existe, ¿Desea sobreescribirlo? (s/n)")
-                            if (respuesta == "s"):
-                                #pendiente                       
+                            if respuesta == "s":
+                                #Revisar mas tarde
                                 contenido = ""
                                 if (script.getSize() != 0):
                                     num = 0
@@ -1010,83 +1053,98 @@ def comando_ejecutar(parametro, valor):
                                         contenido = archivo.read()
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
+                                pregunta = False
+                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo editado exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
+                                respuesta = "None"
+                                return None
+                            elif respuesta == "n":
+                                pregunta = False
+                                respuesta = "None"
+                                return None
+                            else:
+                                mensajes += '<span contentEditable="false" class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> El archivo ya existe, ¿Desea sobreescribirlo? (s/n)&nbsp;</span><br>'
+                                return "confirmacion"
                 else:
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ningun usuario ha iniciado sesion.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el archivo.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO MKDIR
     elif (comando.lower() == 'mkdir'):
         if (parametro.lower() == 'path'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ruta de carpeta...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'r'):
+            mensajes += '<span contentEditable="false" class="text-white">leyendo parametro r...</span><br>\n'
             script.setR(True)
         elif (parametro.lower() == 'ejecutar'):
             if script.errors == 0:
                 if (script.getR()):
                     try:
                         os.makedirs(script.getPath())
-                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
-                        mensajes += '<span class="text-info">...Comando mkdir ejecutado</span><br>\n'  
+                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'  
                     except FileNotFoundError as ex:
-                        print(ex)
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i>' + ex + '</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
                 else:
                     try:
                         os.mkdir(script.getPath())
-                        mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
-                        mensajes += '<span class="text-info">...Comando mkdir ejecutado</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'
                     except FileNotFoundError as ex:
-                        print(ex)
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La ruta de carpetas no existe.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i>' + ex + '</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO PAUSE
     elif (comando.lower() == 'pause'):
-        while True: 
-            tecla = input("\033[1;33m<<Confirm>> {}\033[00m\n" .format("Presione 'ENTER' para continuar "))
-            if (tecla == ""):
-                break
-        return None
+        if respuesta == "":
+            respuesta = "None"
+            return None
+        else:
+            mensajes += '<span contentEditable="false" class="text-warning"><i class="fa-solid fa-triangle-exclamation"></i> Presione "Enter" para continuar&nbsp;</span><br>'
+            return "pausa"
     #COMANDO EXECUTE
     elif (comando.lower() == 'execute'):
         if (parametro.lower() == "path"):
-            mensajes += '<span class="text-white">leyendo ruta del archivo...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ruta del archivo...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == 'ejecutar'):
             if script.errors == 0:
                 with open(script.getPath(), 'r') as archivo:
                     contenido = archivo.read()
-                mensajes += '<span class="text-info">...Comando execute ejecutado</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-info">...Comando execute ejecutado</span><br>\n'
                 return contenido
                 #return [contenido, mensajes]
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo ejecutar el archivo.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo ejecutar el archivo.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     #COMANDO REP
     elif (comando.lower() == "rep"):
         if (parametro.lower() == "name"):
-            mensajes += '<span class="text-white">leyendo nombre del reporte...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo nombre del reporte...</span><br>\n'
             script.setName(valor)
         elif (parametro.lower() == "path"):
-            mensajes += '<span class="text-white">leyendo ruta del reporte...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ruta del reporte...</span><br>\n'
             script.setPath(valor)
         elif (parametro.lower() == "id"):
-            mensajes += '<span class="text-white">leyendo id de la particion...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo id de la particion...</span><br>\n'
             script.setId(valor)
         elif (parametro.lower() == "ruta"):
-            mensajes += '<span class="text-white">leyendo ruta del reporte...</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-white">leyendo ruta del reporte...</span><br>\n'
             script.setRuta(valor)
         elif (parametro.lower() == "ejecutar"):
             if (script.errors == 0):
@@ -1097,12 +1155,12 @@ def comando_ejecutar(parametro, valor):
                         name_part = particiones_montadas[script.getId()][0]
                         path = particiones_montadas[script.getId()][1]
                     else:
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
                         return None
                 if not(os.path.exists(path)):
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> El disco no existe.</span><br>\n'
-                    mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El disco no existe.</span><br>\n'
+                    mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
                     return None
                 if (script.getName().lower() == "file"):
                     #obtener mbr
@@ -1156,8 +1214,8 @@ def comando_ejecutar(parametro, valor):
                                         ebr = ebr.unpack_data(contenido)
                     #verificar si existe la particion
                     if part_formateada == None:
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se encontro la particion.</span><br>\n'
-                        mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se encontro la particion.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
                         return None
                     #generar reporte
                     generarReporteArchivo(path, part_formateada, script.getRuta(), script.getPath())                    
@@ -1165,17 +1223,17 @@ def comando_ejecutar(parametro, valor):
                     generarReporteMBR(path, script.getPath())
                 elif (script.getName().lower() == "disk"):
                     generarReporteDisco(path, script.getPath())
-                mensajes += '<span class="text-success"><i class="fa-solid fa-check"></i> Reporte generado exitosamente.</span><br>\n'
-                mensajes += '<span class="text-info">...Comando rep ejecutado</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Reporte generado exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-info">...Comando rep ejecutado</span><br>\n'
                 return None
             else:
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
         else:
             script.errors += 1
-            mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
+            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Parametro no valido.</span><br>\n'
         return None
     elif (comando[0] == "#"):
-        mensajes += '<span class="text-secondary">' + comando[1:] + '</span><br>\n'
+        mensajes += '<span contentEditable="false" class="text-secondary">' + comando[1:] + '</span><br>\n'
         return None
 
 #FUNCIONES
@@ -1465,8 +1523,8 @@ def generarReporteArchivo(path, part_formateada, ruta, pathReport):
             archivo.seek(ini_archivo)
             byte = archivo.read(1)
             if byte == b'\x00':          
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ' + part_formateada.getPart_name() + 'no esta formateada.</span><br>\n'
-                mensajes += '<span class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ' + part_formateada.getPart_name() + 'no esta formateada.</span><br>\n'
+                mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
                 return None
         #obtener longitud de archivo users.txt
         pos = 0
@@ -1506,10 +1564,18 @@ def verificarNombre(pathReport):
             n += 1
     return pathReport
 
-def setM():
-    global mensajes
-    mensajes = ""
-
 def getMessages():
     global mensajes
     return mensajes
+
+def clearMessages():
+    global mensajes
+    mensajes = ""
+
+def getRespuesta():
+    global respuesta
+    return respuesta
+
+def setRespuesta(r):
+    global respuesta
+    respuesta = r

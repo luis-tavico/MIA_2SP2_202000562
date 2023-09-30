@@ -187,6 +187,3 @@ def analizador(input):
     parser = yacc.yacc()
     lexer.lineno = 1
     return parser.parse(input)
-
-def getM():
-    print(getMessages())

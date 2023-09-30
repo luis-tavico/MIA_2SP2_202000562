@@ -5,10 +5,10 @@ from analizador.gramatica import *
 
 if __name__ == '__main__':
     while True:
-        setM()
+        clearMessages()
         entrada = input("App> ")
         if entrada == 'exit': break
         waiting_scripts = analizador(entrada)
         while (waiting_scripts != None):
             waiting_scripts = analizador(waiting_scripts)
-        getM()
+        print(getMessages())

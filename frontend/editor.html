@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Editor</title>
+</head>
+<body class="bg-dark">
+    <style>
+        .containerCode {
+            height: 260px;
+            font-family: monospace;
+        }
+
+        #inputCode {
+            width: 100%;
+            resize: none;
+        }
+
+        #inputCode:focus {
+            outline: none;
+        }
+
+        #outputCode {
+            height: 255px;
+            background-color: #101010;
+            overflow: auto;
+            /*display: flex;
+            flex-direction: column-reverse;*/
+        }
+
+        #outputCode:focus {
+            outline: none;
+        }
+
+        /* inputCode Scrollbar */
+        #inputCode::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #inputCode::-webkit-scrollbar-track {
+            background-color: transparent; 
+        }
+        
+        #inputCode::-webkit-scrollbar-thumb {
+            border-radius: 25px;
+            background-color: #99A3A4;
+        }
+
+        /* output Scrollbar */
+        #outputCode::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        #outputCode::-webkit-scrollbar-track {
+            background-color: transparent; 
+        }
+        
+        #outputCode::-webkit-scrollbar-thumb {
+            border-radius: 25px;
+            background-color: #99A3A4;
+        }
+
+        /* Boton Subir Archivo */
+        .file-input-button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 7px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        #file-input {
+            display: none;
+        }
+    </style>
+
+    <div class="col-12 py-3">
+        <label for="file-input" class="file-input-button"><i class="fa-solid fa-file-arrow-up"></i> Cargar Archivo</label>
+        <input type="file" id="file-input" onchange="mostrarContenido()" accept=".adsj">
+        <button type="button" class="btn btn-success" id="btnRun" onclick="obtenerContenido()">Ejecutar</button>
+    </div>
+    <div class="containerCode col-12 px-3">
+        <textarea class="bg-dark text-white border border-secondary p-2" id="inputCode" rows="10" spellcheck="false"></textarea>
+    </div>
+    <div class="containerCode col-12 px-3 mt-3">
+        <div class="text-white border border-secondary p-2" id="outputCode" contentEditable="true" spellcheck="false">
+        </div>
+    </div>
+
+    <script>
+        function mostrarContenido() {
+            const archivoInput = document.getElementById("file-input");
+            const areaContenido = document.getElementById("inputCode");
+            const out = document.getElementById("outputCode");
+
+            const archivoSeleccionado = archivoInput.files[0];
+            const lector = new FileReader();
+
+            lector.onload = function (e) {
+                const contenido = e.target.result;
+                areaContenido.textContent = contenido;
+            };
+
+            lector.readAsText(archivoSeleccionado);
+            // Agregar contenido al div
+            /*
+            var span = document.createElement("span");
+            span.setAttribute("contentEditable", "false");
+            span.classList.add("text-info");
+            span.textContent = "Ejecutando comando execute...";
+            var br = document.createElement("br");
+            out.appendChild(span);
+            out.appendChild(br);
+            */
+            //out.appendChild('<span contentEditable="false" class="text-info">Ejecutando comando execute...</span><br>');
+            //obtner contenido actual
+            var contenidoActual = out.innerHTML;
+            console.log(contenidoActual);
+            //
+            out.innerHTML= "<span contentEditable=\"false\" class=\"text-secondary\">Crea un disco de 5 M en Escritorio</span><br>\n<span contentEditable=\"false\" class=\"text-info\">Ejecutando comando mkdisk...</span><br>\n<span contentEditable=\"false\" class=\"text-white\">leyendo tamaño del disco...</span><br>\n<span contentEditable=\"false\" class=\"text-white\">leyendo ruta del disco...</span><br>\n<span contentEditable=\"false\" class=\"text-white\">leyendo ajuste del disco...</span><br>\n<span class=\"text-danger\"><i class=\"fa-solid fa-xmark\"></i> El disco ya existe.</span><br>\n<span contentEditable=\"false\" class=\"text-danger\"><i class=\"fa-solid fa-xmark\"></i> No se pudo crear el disco.</span><br>\n";
+            //out.innerHTML= contenidoActual + '<span contentEditable="false" class="text-info">Ejecutando comando execute...</span><br>';
+            out.scrollTop = out.scrollHeight ;
+            areaContenido.scrollTop = areaContenido.scrollHeight;
+        }
+
+        function obtenerContenido() {
+            var textarea = document.getElementById("inputCode");
+            var contenido = textarea.value;
+            /*document.getElementById("contenidoMostrado").textContent = "Contenido del textarea: " + contenido;*/
+            console.log(contenido)
+        }
+
+        document.getElementById("outputCode").addEventListener("keydown", function(event) {
+            if (event.key === "Enter") {
+                alert("Se presionó la tecla Enter dentro del div.");
+            }
+            else if (event.key === "s") {
+                alert("Se presionó la tecla s dentro del div.");
+            }
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
