@@ -4,8 +4,8 @@
     <button class="btn btn-success m-2" id="btnRun" type="button" (click)="enviarComandos()">Ejecutar</button>
 </div>
 <div class="containerCode col-12 px-3">
-    <textarea #inputCodeConsole [value]="comandos" class="bg-dark text-white border border-secondary p-2" id="inputCode" rows="10" spellcheck="false"></textarea>
+    <textarea #inputCodeConsole class="bg-dark text-white border border-secondary p-2" id="inputCode" rows="10" spellcheck="false"></textarea>
 </div>
 <div class="containerCode col-12 px-3 mt-3">
-    <div #outputCodeConsole (keydown)="enviarRespuesta($event)" tabindex="0" class="text-white border border-secondary p-2" id="outputCode" contentEditable="true" spellcheck="false" [innerHTML]="respuesta"></div>
+    <div #outputCodeConsole (keydown)="enviarRespuesta($event)" tabindex="0" class="text-white border border-secondary p-2" id="outputCode" contentEditable="true" spellcheck="false"></div>
 </div>

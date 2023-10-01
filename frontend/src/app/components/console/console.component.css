@@ -15,10 +15,7 @@
 #outputCode {
     height: 255px;
     background-color: #101010;
-    /*overflow: auto;*/
-    overflow-y: scroll;
-    /*display: flex;
-    flex-direction: column-reverse;*/
+    overflow: auto;
 }
 
 #outputCode:focus {

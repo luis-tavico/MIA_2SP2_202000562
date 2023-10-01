@@ -9,8 +9,7 @@ import { ConsoleService } from 'src/app/services/console.service';
 export class ConsoleComponent {
 
   @ViewChild('outputCodeConsole') outputCodeConsole!: ElementRef;
-  respuesta: string = "";
-  comandos: string = "";
+  @ViewChild('inputCodeConsole') inputCodeConsole!: ElementRef;
   rspt : string = "";
 
   constructor(private service: ConsoleService) { }
@@ -20,20 +19,21 @@ export class ConsoleComponent {
       if (archivoSeleccionado) {
         const lector = new FileReader();
         lector.onload = (e: any) => {
-          this.comandos = e.target.result;
+          this.outputCodeConsole.nativeElement.innerHTML = "";
+          this.inputCodeConsole.nativeElement.value = e.target.result;
         };
         lector.readAsText(archivoSeleccionado); }
       }
 
     enviarComandos() {
-      //const postData = {"request": ["execute -path=\"/home/user/Escritorio/prueba.adsj\"", "None"]};
-      const postData = {"request": [this.comandos, "None"]};
+      var commands = this.inputCodeConsole.nativeElement.value
+      const postData = {"request": [commands, "None"]};
       
       this.service.postCode(postData).subscribe(
         (response) => {
           var r = response as any;
           var contenido_anterior = this.outputCodeConsole.nativeElement.innerHTML;
-          this.respuesta = contenido_anterior + r.response
+          this.outputCodeConsole.nativeElement.innerHTML = contenido_anterior + r.response;
           this.outputCodeConsole.nativeElement.scrollTop = this.outputCodeConsole.nativeElement.scrollHeight;
         },
         (error) => {
@@ -44,22 +44,20 @@ export class ConsoleComponent {
     }
 
     enviarRespuesta(event: KeyboardEvent) {
-      //if (event.key === 's' || event.key === 'n' || event.key === 'Enter') {
       if (event.key === 'Enter') {
         const postData = {"request": ["", this.rspt]}
-        //
         this.service.postCode(postData).subscribe(
           (response) => {
             var r = response as any;
             var contenido_anterior = this.outputCodeConsole.nativeElement.innerHTML;
-            this.respuesta = contenido_anterior + r.response         
+            this.outputCodeConsole.nativeElement.innerHTML = contenido_anterior + r.response;
+            this.outputCodeConsole.nativeElement.scrollTop = this.outputCodeConsole.nativeElement.scrollHeight;      
           },
           (error) => {
             console.error('Error:', error);
           }
         );
         this.rspt = ""  
-        //
       } else if (event.key === 'Backspace') {
         this.rspt = this.rspt.slice(0, -1);
       } else {

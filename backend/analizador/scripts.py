@@ -1011,6 +1011,7 @@ def comando_ejecutar(parametro, valor):
                                 return None
                             elif respuesta == "n":
                                 pregunta = False
+                                mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'  
                                 respuesta = "None"
                                 return None
                             else:
@@ -1060,6 +1061,7 @@ def comando_ejecutar(parametro, valor):
                                 return None
                             elif respuesta == "n":
                                 pregunta = False
+                                mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'  
                                 respuesta = "None"
                                 return None
                             else:
@@ -1579,3 +1581,16 @@ def getRespuesta():
 def setRespuesta(r):
     global respuesta
     respuesta = r
+
+def clearValues():
+    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_mkfile, mensajes_rmdisk
+    comando = ""
+    script = None
+    particiones_montadas = {}
+    usuario_actual = ""
+    info = []
+    mensajes = ""
+    respuesta = "None"
+    pregunta = False
+    mensajes_rmdisk = ""
+    mensajes_mkfile = ""

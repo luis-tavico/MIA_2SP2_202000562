@@ -29,6 +29,8 @@ def console():
     content = rqst[0]
     reply = rqst[1]
     if (reply == "None"):
+        clearValues()
+        waiting_lines = []
         lines = content.splitlines()
         while len(lines) > 0:
             line = lines.pop(0)
