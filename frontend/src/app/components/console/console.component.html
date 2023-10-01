@@ -1,0 +1,11 @@
+<div class="col-12 px-3 py-3">
+    <label class="file-input-button" for="file-input"><i class="fa-solid fa-file-arrow-up"></i> Cargar Archivo</label>
+    <input (change)="cargarArchivo($event)" id="file-input" type="file"  accept=".adsj">
+    <button class="btn btn-success m-2" id="btnRun" type="button" (click)="enviarComandos()">Ejecutar</button>
+</div>
+<div class="containerCode col-12 px-3">
+    <textarea #inputCodeConsole [value]="comandos" class="bg-dark text-white border border-secondary p-2" id="inputCode" rows="10" spellcheck="false"></textarea>
+</div>
+<div class="containerCode col-12 px-3 mt-3">
+    <div #outputCodeConsole (keydown)="enviarRespuesta($event)" tabindex="0" class="text-white border border-secondary p-2" id="outputCode" contentEditable="true" spellcheck="false" [innerHTML]="respuesta"></div>
+</div>

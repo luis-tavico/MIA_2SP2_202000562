@@ -479,9 +479,9 @@ def comando_ejecutar(parametro, valor):
                     id = "62" + num_particion + os.path.splitext(os.path.basename(script.getPath()))[0]
                     if not(id in particiones_montadas):   
                         particiones_montadas[id] = [script.getName(), script.getPath()]
-                        mensajes += '<span contentEditable="false" style="color: #9A2EFE">Particiones montadas:</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-primary">Particiones montadas:</span><br>\n'
                         for clave, valor in particiones_montadas.items():
-                            mensajes += '<span contentEditable="false" style="color: #9A2EFE">' + clave + '</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-primary">' + clave + '</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion montada exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando mount ejecutado</span><br>\n'
                     else:
@@ -718,7 +718,7 @@ def comando_ejecutar(parametro, valor):
                                     break
                         if (usuario_existe):
                             if (contraseña_correcta):
-                                mensajes += '<span contentEditable="false" style="color: #9A2EFE">¡Bienvenido ' + script.getUser() + '!</span><br>\n'
+                                mensajes += '<span contentEditable="false" class="text-primary">¡Bienvenido ' + script.getUser() + '!</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Sesion iniciada exitosamente.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-info">...Comando login ejecutado</span><br>\n'
                                 usuario_actual = script.getUser()

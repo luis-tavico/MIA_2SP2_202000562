@@ -1,0 +1,68 @@
+.containerCode {
+    height: 260px;
+    font-family: monospace;
+}
+
+#inputCode {
+    width: 100%;
+    resize: none;
+}
+
+#inputCode:focus {
+    outline: none;
+}
+
+#outputCode {
+    height: 255px;
+    background-color: #101010;
+    /*overflow: auto;*/
+    overflow-y: scroll;
+    /*display: flex;
+    flex-direction: column-reverse;*/
+}
+
+#outputCode:focus {
+    outline: none;
+}
+
+/* inputCode Scrollbar */
+#inputCode::-webkit-scrollbar {
+    width: 8px;
+}
+
+#inputCode::-webkit-scrollbar-track {
+    background-color: transparent; 
+}
+
+#inputCode::-webkit-scrollbar-thumb {
+    border-radius: 25px;
+    background-color: #99A3A4;
+}
+
+/* output Scrollbar */
+#outputCode::-webkit-scrollbar {
+    width: 8px;
+}
+
+#outputCode::-webkit-scrollbar-track {
+    background-color: transparent; 
+}
+
+#outputCode::-webkit-scrollbar-thumb {
+    border-radius: 25px;
+    background-color: #99A3A4;
+}
+
+/* Boton Subir Archivo */
+.file-input-button {
+    background-color: #007bff;
+    color: #fff;
+    padding: 7px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#file-input {
+    display: none;
+}
