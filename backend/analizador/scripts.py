@@ -135,7 +135,7 @@ def comando_ejecutar(parametro, valor):
                         archivo.seek(pos)
                         archivo.write(particion.pack_data())
                     pos += particion.getLength()
-                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Disco creado exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Disco creado exitosamente.</span><br>\n'
                 mensajes += '<span contentEditable="false" class="text-info">...Comando mkdisk ejecutado</span><br>\n'
             else: 
                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear el disco.</span><br>\n'
@@ -157,7 +157,7 @@ def comando_ejecutar(parametro, valor):
                 if respuesta == "s":
                     os.remove(script.getPath())
                     pregunta = False
-                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Disco eliminado exitosamente.</span><br>\n'
+                    mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Disco eliminado exitosamente.</span><br>\n'
                     mensajes += '<span contentEditable="false" class="text-info">...Comando rmdisk ejecutado</span><br>\n'
                     respuesta = "None"
                     return None
@@ -310,7 +310,7 @@ def comando_ejecutar(parametro, valor):
                             with open(script.getPath(), 'rb+') as archivo:
                                 archivo.seek(inicio)
                                 archivo.write(ebr.pack_data())
-                            mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                            mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
                             mensajes += '<span contentEditable="false" class="text-info">...Comando fdisk ejecutado</span><br>\n'
                             return None
                         else:
@@ -344,7 +344,7 @@ def comando_ejecutar(parametro, valor):
                                     with open(script.getPath(), 'rb+') as archivo:
                                         archivo.seek(puntero)
                                         archivo.write(ebr.pack_data())
-                                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                                    mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
                                     mensajes += '<span contentEditable="false" class="text-info">...Comando fdisk ejecutado</span><br>\n'
                                     return None
                                 else:
@@ -392,7 +392,7 @@ def comando_ejecutar(parametro, valor):
                         with open(script.getPath(), 'rb+') as archivo:
                             archivo.seek(pos_en_disco)
                             archivo.write(ebr.pack_data())
-                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
+                    mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Particion creada exitosamente.</span><br>\n'
                     mensajes += '<span contentEditable="false" class="text-info">...Comando fdisk ejecutado</span><br>\n'
                     return None
                 else:
@@ -482,7 +482,7 @@ def comando_ejecutar(parametro, valor):
                         mensajes += '<span contentEditable="false" class="text-primary">Particiones montadas:</span><br>\n'
                         for clave, valor in particiones_montadas.items():
                             mensajes += '<span contentEditable="false" class="text-primary">' + clave + '</span><br>\n'
-                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion montada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Particion montada exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando mount ejecutado</span><br>\n'
                     else:
                         script.errors += 1
@@ -500,7 +500,7 @@ def comando_ejecutar(parametro, valor):
         elif (parametro.lower() == 'ejecutar'):
             if script.getId() in particiones_montadas:   
                 particiones_montadas.pop(script.getId())
-                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion desmontada exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Particion desmontada exitosamente.</span><br>\n'
                 mensajes += '<span contentEditable="false" class="text-info">...Comando unmount ejecutado</span><br>\n'
             else:
                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
@@ -586,7 +586,7 @@ def comando_ejecutar(parametro, valor):
                         archivo.seek(part_formatear.getPart_start())
                         contenido = ('1, G, root\n1, U, root, root, 123$').encode('utf-8')
                         archivo.write(contenido)
-                    mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Particion formateada exitosamente.</span><br>\n'
+                    mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Particion formateada exitosamente.</span><br>\n'
                     mensajes += '<span contentEditable="false" class="text-info">...Comando mkfs ejecutado</span><br>\n'
                     return None
                     #####
@@ -719,7 +719,7 @@ def comando_ejecutar(parametro, valor):
                         if (usuario_existe):
                             if (contraseña_correcta):
                                 mensajes += '<span contentEditable="false" class="text-primary">¡Bienvenido ' + script.getUser() + '!</span><br>\n'
-                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Sesion iniciada exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Sesion iniciada exitosamente.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-info">...Comando login ejecutado</span><br>\n'
                                 usuario_actual = script.getUser()
                             else:
@@ -746,7 +746,7 @@ def comando_ejecutar(parametro, valor):
             if (usuario_actual != ""):
                 usuario_actual = ""
                 info.clear()
-                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Sesion finalizada exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Sesion finalizada exitosamente.</span><br>\n'
                 mensajes += '<span contentEditable="false" class="text-info">...Comando logout ejecutado</span><br>\n'
             else:
                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No hay una sesion activa.</span><br>\n'
@@ -781,7 +781,7 @@ def comando_ejecutar(parametro, valor):
                         with open(info[0], 'rb+') as archivo:
                             archivo.seek(info[1])
                             archivo.write((info[2]+"$").encode('utf-8'))                   
-                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Grupo creado exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Grupo creado exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando mkgrp ejecutado</span><br>\n'
                     else:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a crear ya existe.</span><br>\n'
@@ -828,7 +828,7 @@ def comando_ejecutar(parametro, valor):
                         with open(info[0], 'rb+') as archivo:
                             archivo.seek(info[1])
                             archivo.write((info[2]+"$").encode('utf-8'))
-                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Grupo eliminado exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Grupo eliminado exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando rmgrp ejecutado</span><br>\n'
                     else:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El grupo a eliminar no existe.</span><br>\n'
@@ -883,7 +883,7 @@ def comando_ejecutar(parametro, valor):
                             with open(info[0], 'rb+') as archivo:
                                 archivo.seek(info[1])
                                 archivo.write((info[2]+"$").encode('utf-8'))
-                            mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Usuario creado exitosamente.</span><br>\n'
+                            mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Usuario creado exitosamente.</span><br>\n'
                             mensajes += '<span contentEditable="false" class="text-info">...Comando mkusr ejecutado</span><br>\n'            
                         else:
                             mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a crear ya existe.</span><br>\n'
@@ -933,7 +933,7 @@ def comando_ejecutar(parametro, valor):
                         with open(info[0], 'rb+') as archivo:
                             archivo.seek(info[1])
                             archivo.write((info[2]+"$").encode('utf-8'))
-                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Usuario eliminado exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Usuario eliminado exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando rmusr ejecutado</span><br>\n'   
                     else:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a eliminar no existe.</span><br>\n'
@@ -987,7 +987,7 @@ def comando_ejecutar(parametro, valor):
                                     contenido = archivo.read()
                             with open(script.getPath(), "w") as archivo:
                                 archivo.write(contenido)
-                            mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
+                            mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
                             mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                         else:
                             if respuesta == "s":
@@ -1005,7 +1005,7 @@ def comando_ejecutar(parametro, valor):
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
                                 pregunta = False
-                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo editado exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Archivo editado exitosamente.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                                 respuesta = "None"
                                 return None
@@ -1034,7 +1034,7 @@ def comando_ejecutar(parametro, valor):
                                         contenido = archivo.read()
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
-                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Archivo creado exitosamente.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                             else:
                                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La ruta de carpetas no existe.</span><br>\n'
@@ -1055,7 +1055,7 @@ def comando_ejecutar(parametro, valor):
                                 with open(script.getPath(), 'w') as archivo:
                                     archivo.write(contenido)
                                 pregunta = False
-                                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Archivo editado exitosamente.</span><br>\n'
+                                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Archivo editado exitosamente.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-info">...Comando mkfile ejecutado</span><br>\n'   
                                 respuesta = "None"
                                 return None
@@ -1089,7 +1089,7 @@ def comando_ejecutar(parametro, valor):
                 if (script.getR()):
                     try:
                         os.makedirs(script.getPath())
-                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'  
                     except FileNotFoundError as ex:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i>' + ex + '</span><br>\n'
@@ -1097,7 +1097,7 @@ def comando_ejecutar(parametro, valor):
                 else:
                     try:
                         os.mkdir(script.getPath())
-                        mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'
                     except FileNotFoundError as ex:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i>' + ex + '</span><br>\n'
@@ -1225,7 +1225,7 @@ def comando_ejecutar(parametro, valor):
                     generarReporteMBR(path, script.getPath())
                 elif (script.getName().lower() == "disk"):
                     generarReporteDisco(path, script.getPath())
-                mensajes += '<span contentEditable="false" class="text-success"><i class="fa-solid fa-check"></i> Reporte generado exitosamente.</span><br>\n'
+                mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Reporte generado exitosamente.</span><br>\n'
                 mensajes += '<span contentEditable="false" class="text-info">...Comando rep ejecutado</span><br>\n'
                 return None
             else:
