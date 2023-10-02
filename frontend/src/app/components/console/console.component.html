@@ -1,7 +1,14 @@
 <div class="col-12 px-3 py-3">
-    <label class="file-input-button" for="file-input"><i class="fa-solid fa-file-arrow-up"></i> Cargar Archivo</label>
-    <input (change)="cargarArchivo($event)" id="file-input" type="file"  accept=".adsj">
-    <button class="btn btn-success m-2" id="btnRun" type="button" (click)="enviarComandos()">Ejecutar</button>
+    <div class="row">
+        <div class="col-10">
+            <label class="boton lblUpload" for="btnUpload"><i class="fa-solid fa-file-arrow-up"></i> Cargar Archivo</label>
+            <input (change)="cargarArchivo($event)" id="btnUpload" type="file"  accept=".adsj">
+            <button class="boton m-2" id="btnRun" type="button" (click)="enviarComandos()"><i class="fa-solid fa-play"></i> Ejecutar</button>
+        </div>
+        <div class="col-2 pt-2 pe-3" style="text-align: right;">
+            <button class="boton" id="btnLogin" type="button" routerLink="/login"><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesion</button>
+        </div>
+    </div>
 </div>
 <div class="containerCode col-12 px-3">
     <textarea #inputCodeConsole class="bg-dark text-white border border-secondary p-2" id="inputCode" rows="10" spellcheck="false"></textarea>

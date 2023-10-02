@@ -22,8 +22,9 @@ export class ConsoleComponent {
           this.outputCodeConsole.nativeElement.innerHTML = "";
           this.inputCodeConsole.nativeElement.value = e.target.result;
         };
-        lector.readAsText(archivoSeleccionado); }
+        lector.readAsText(archivoSeleccionado); 
       }
+    }
 
     enviarComandos() {
       var commands = this.inputCodeConsole.nativeElement.value

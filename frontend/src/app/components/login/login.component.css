@@ -1,0 +1,27 @@
+.input {
+    border: none;
+}
+.input:focus {
+    outline: none;
+    box-shadow: none;
+}
+.card-header {
+    background-color: #2d2d35;
+}
+.card-body {
+    background-color: #2d2d35;
+}
+
+/* Estilo Boton */
+.boton {
+    color: #fff;
+    padding: 7px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Boton Regresar */
+#btnRegresar {
+    background-color: #E74C3C;
+}

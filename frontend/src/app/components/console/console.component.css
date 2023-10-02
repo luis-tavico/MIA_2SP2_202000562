@@ -50,9 +50,8 @@
     background-color: #99A3A4;
 }
 
-/* Boton Subir Archivo */
-.file-input-button {
-    background-color: #007bff;
+/* Estilo Boton */
+.boton {
     color: #fff;
     padding: 7px 15px;
     border: none;
@@ -60,6 +59,26 @@
     cursor: pointer;
 }
 
-#file-input {
+/* Boton Subir Archivo */
+.lblUpload {
+    background-color: #2980B9;
+}
+
+#btnUpload {
     display: none;
+}
+
+/* Boton Ejecutar */
+#btnRun {
+    background-color: #239B56;
+}
+
+/* Boton Iniciar Sesion */
+#btnLogin {
+    background-color: #2980B9;
+}
+
+/* Boton Iniciar Sesion */
+#btnLogin {
+    background-color: #2980B9;
 }
