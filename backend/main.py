@@ -9,16 +9,34 @@ from analizador.gramatica import *
 app = Flask(__name__)
 CORS(app)
 
-@app.route("/inicio")
-def inicio():
-    return jsonify({"mensaje":"hola"}), 200
-
-@app.route("/login")
-def login():
-    return {"user": "admin"}
-
 global waiting_lines
 waiting_lines = []
+
+@app.route("/login", methods=["POST"])
+def login():
+    clearMessages()
+    global waiting_lines
+    #{"nombre":["contenido de textarea", "respuesta a pregunta"]}
+    rqst = request.get_json()['request'] 
+    content = rqst[0]
+    limpiarValores()
+    waiting_lines = []
+    lines = content.splitlines()
+    while len(lines) > 0:
+        line = lines.pop(0)
+        if not (line.isspace()):
+            waiting_scripts = analizador(line)
+            if waiting_scripts == None:
+                pass
+            elif waiting_scripts == "pausa" or waiting_scripts == "confirmacion":
+                lines.insert(0, line)
+                waiting_lines = lines
+                break
+            else:
+                new_lines = waiting_scripts.splitlines()
+                new_lines.extend(lines)
+                lines = new_lines
+    return jsonify({"message": getMessagesLogin(), "status": getStatus()}), 201
 
 @app.route("/", methods=["POST"])
 def console():

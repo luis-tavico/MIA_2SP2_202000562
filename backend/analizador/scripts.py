@@ -25,7 +25,7 @@ from analizador.comandos.rmusr import Rmusr
 from analizador.comandos.superBloque import SuperBloque
 from analizador.comandos.unmount import Unmount
 
-global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile
+global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile, mensajesLogin, status
 particiones_montadas = {}
 usuario_actual = ""
 info = []
@@ -34,6 +34,8 @@ respuesta = "None"
 pregunta = False
 mensajes_rmdisk = ""
 mensajes_mkfile = ""
+mensajesLogin = ""
+status = ""
 
 def comando_activar(valor):
     global comando, script, mensajes, mensajes_rmdisk, mensajes_mkfile
@@ -91,7 +93,7 @@ def comando_activar(valor):
         mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando rep...</span><br>\n'
 
 def comando_ejecutar(parametro, valor):
-    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile
+    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile, mensajesLogin, status
     #COMANDO MKDISK
     if (comando.lower() == "mkdisk"):
         if (parametro.lower() == 'size'):
@@ -676,6 +678,8 @@ def comando_ejecutar(parametro, valor):
                         if part_formateada == None:
                             mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se encontro la particion.</span><br>\n'
                             mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                            mensajesLogin += 'No se encontro la particion'
+                            status += "Error"
                             return None
                         ini_archivo = part_formateada.getPart_start()
                         #verificar si esta formateada la particion
@@ -685,6 +689,8 @@ def comando_ejecutar(parametro, valor):
                             if byte == b'\x00':
                                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion ' + part_formateada.getPart_name() + 'no esta formateada.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                                mensajesLogin += 'La particion no esta formateada'
+                                status += "Error"
                                 return None
                         #obtener longitud de archivo users.txt
                         pos = 0
@@ -721,19 +727,29 @@ def comando_ejecutar(parametro, valor):
                                 mensajes += '<span contentEditable="false" class="text-primary">¡Bienvenido ' + script.getUser() + '!</span><br>\n'
                                 mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Sesion iniciada exitosamente.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-info">...Comando login ejecutado</span><br>\n'
+                                mensajesLogin += 'Sesion iniciada exitosamente'
+                                status += "Ok"
                                 usuario_actual = script.getUser()
                             else:
                                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Contraseña incorrecta.</span><br>\n'
                                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                                mensajesLogin += 'Contraseña incorrecta'
+                                status += "Error"
                         else:
                             mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Usuario no existe.</span><br>\n'
                             mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                            mensajesLogin += 'Usuario no existe'
+                            status += "Error"
                     else:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> La particion no esta montada.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                        mensajesLogin += 'La particion no esta montada'
+                        status += "Error"
                 else:
                     mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> Ya hay una sesion activa.</span><br>\n'
                     mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
+                    mensajesLogin += 'Ya existe una sesion activa'
+                    status += "Warning"
             else:
                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo iniciar sesion.</span><br>\n'
         else:
@@ -1583,7 +1599,7 @@ def setRespuesta(r):
     respuesta = r
 
 def clearValues():
-    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_mkfile, mensajes_rmdisk
+    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_mkfile, mensajes_rmdisk, mensajesLogin, status
     comando = ""
     script = None
     particiones_montadas = {}
@@ -1594,3 +1610,25 @@ def clearValues():
     pregunta = False
     mensajes_rmdisk = ""
     mensajes_mkfile = ""
+    mensajesLogin = ""
+    status = ""
+
+def limpiarValores():
+    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_mkfile, mensajes_rmdisk, mensajesLogin, status
+    comando = ""
+    script = None
+    mensajes = ""
+    respuesta = "None"
+    pregunta = False
+    mensajes_rmdisk = ""
+    mensajes_mkfile = ""
+    mensajesLogin = ""
+    status = ""
+
+def getMessagesLogin():
+    global mensajesLogin
+    return mensajesLogin
+
+def getStatus():
+    global status
+    return status
