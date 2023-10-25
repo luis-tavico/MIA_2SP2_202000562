@@ -8,12 +8,14 @@ import { LoginComponent } from './components/login/login.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { ReportsComponent } from './components/reports/reports.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ConsoleComponent,
-    LoginComponent
+    LoginComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,

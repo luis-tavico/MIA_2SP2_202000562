@@ -1,0 +1,13 @@
+/* Estilo Boton */
+.boton {
+    color: #fff;
+    padding: 7px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* Boton Regresar */
+#btnRegresar {
+    background-color: #E74C3C;
+}
