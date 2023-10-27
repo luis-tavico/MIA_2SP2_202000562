@@ -14,7 +14,7 @@ waiting_lines = []
 
 @app.route("/test", methods=["GET"])
 def test():
-    return jsonify({"message": "Hello World!"}), 200
+    return jsonify({"message": "MIA 2S PY2"}), 200
 
 
 @app.route("/login", methods=["POST"])
