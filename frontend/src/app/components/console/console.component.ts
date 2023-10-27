@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
-import { ConsoleService } from 'src/app/services/console.service';
+//import { ConsoleService } from 'src/app/services/console.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-console',
@@ -12,7 +13,7 @@ export class ConsoleComponent {
   @ViewChild('inputCodeConsole') inputCodeConsole!: ElementRef;
   rspt : string = "";
 
-  constructor(private service: ConsoleService) { }
+  constructor(private service: DataService) { }
 
     cargarArchivo(event: any) {
       const archivoSeleccionado = event.target.files[0];

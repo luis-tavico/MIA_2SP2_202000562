@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { LoginService } from 'src/app/services/login.service';
+//import { LoginService } from 'src/app/services/login.service';
+import { DataService } from 'src/app/services/data.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
@@ -13,7 +14,7 @@ export class LoginComponent {
   inputUsername: string = "";
   inputPassword: string = "";
 
-  constructor(private service: LoginService, private toastr: ToastrService) { }
+  constructor(private service: DataService, private toastr: ToastrService) { }
 
   login() {
     if (this.inputUsername != "" && this.inputPassword != "" && this.inputPartition !="") {
