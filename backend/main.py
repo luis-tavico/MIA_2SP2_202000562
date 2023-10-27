@@ -12,6 +12,11 @@ CORS(app)
 global waiting_lines
 waiting_lines = []
 
+@app.route("/test", methods=["GET"])
+def test():
+    return jsonify({"message": "Hello World!"}), 200
+
+
 @app.route("/login", methods=["POST"])
 def login():
     clearMessages()
