@@ -9,8 +9,9 @@ from analizador.gramatica import *
 app = Flask(__name__)
 CORS(app)
 
-global waiting_lines
+global waiting_lines, reports_list
 waiting_lines = []
+reports_list = []
 
 @app.route("/test", methods=["GET"])
 def test():
@@ -46,7 +47,7 @@ def login():
 @app.route("/", methods=["POST"])
 def console():
     clearMessages()
-    global waiting_lines
+    global waiting_lines, reports_list
     #{"nombre":["contenido de textarea", "respuesta a pregunta"]}
     rqst = request.get_json()['request'] 
     content = rqst[0]
@@ -69,6 +70,7 @@ def console():
                     new_lines = waiting_scripts.splitlines()
                     new_lines.extend(lines)
                     lines = new_lines
+        reports_list = getReports()
         return jsonify({"response": getMessages()}), 201
     else:
         setRespuesta(reply)
@@ -86,6 +88,11 @@ def console():
                     new_lines.extend(waiting_lines)
                     waiting_lines = new_lines                
         return jsonify({"response": getMessages()}), 201
+    
+@app.route("/reports", methods=["GET"])
+def reports():
+    global reports_list
+    return jsonify({"reports": reports_list}), 200
 
 if __name__ == "__main__":
     app.run(debug=True)

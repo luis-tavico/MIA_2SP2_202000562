@@ -1,12 +1,13 @@
 /* Modal */
-/*
 .modal-body {
-    max-height: 441px;
+    max-height: 470px;
+    overflow-x: auto;
     overflow-y: auto;
 }
 
 .modal-body::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
 }
 
 .modal-body::-webkit-scrollbar-track {
@@ -17,7 +18,6 @@
     border-radius: 25px;
     background-color: #99A3A4;
 }
-*/
 
 .modal-content {
     background-color: #1F2327 ;

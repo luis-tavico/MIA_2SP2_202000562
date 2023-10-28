@@ -1,9 +1,11 @@
+import boto3
 import os
 import math
 import random
 import re
-from datetime import datetime
 import subprocess
+from datetime import datetime
+from dotenv import load_dotenv
 from analizador.comandos.ebr import Ebr
 from analizador.comandos.execute import Execute
 from analizador.comandos.fdisk import Fdisk
@@ -25,7 +27,7 @@ from analizador.comandos.rmusr import Rmusr
 from analizador.comandos.superBloque import SuperBloque
 from analizador.comandos.unmount import Unmount
 
-global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile, mensajesLogin, status
+global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile, mensajesLogin, status, reports
 particiones_montadas = {}
 usuario_actual = ""
 info = []
@@ -36,6 +38,7 @@ mensajes_rmdisk = ""
 mensajes_mkfile = ""
 mensajesLogin = ""
 status = ""
+reports = []
 
 def comando_activar(valor):
     global comando, script, mensajes, mensajes_rmdisk, mensajes_mkfile
@@ -93,7 +96,7 @@ def comando_activar(valor):
         mensajes += '<span contentEditable="false" class="text-info">Ejecutando comando rep...</span><br>\n'
 
 def comando_ejecutar(parametro, valor):
-    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile, mensajesLogin, status
+    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_rmdisk, mensajes_mkfile, mensajesLogin, status, reports
     #COMANDO MKDISK
     if (comando.lower() == "mkdisk"):
         if (parametro.lower() == 'size'):
@@ -1236,11 +1239,11 @@ def comando_ejecutar(parametro, valor):
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo generar el reporte.</span><br>\n'
                         return None
                     #generar reporte
-                    generarReporteArchivo(path, part_formateada, script.getRuta(), script.getPath())                    
+                    reports.append(generarReporteArchivo(path, part_formateada, script.getRuta(), 'reportes/'+(os.path.basename(script.getPath()))))                 
                 elif (script.getName().lower() == "mbr"):
-                    generarReporteMBR(path, script.getPath())
+                    reports.append(generarReporteMBR(path, 'reportes/'+(os.path.basename(script.getPath()))))
                 elif (script.getName().lower() == "disk"):
-                    generarReporteDisco(path, script.getPath())
+                    reports.append(generarReporteDisco(path, 'reportes/'+(os.path.basename(script.getPath()))))
                 mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Reporte generado exitosamente.</span><br>\n'
                 mensajes += '<span contentEditable="false" class="text-info">...Comando rep ejecutado</span><br>\n'
                 return None
@@ -1327,7 +1330,7 @@ def generarReporteMBR(path, pathReport):
         if (mbr.getPartitions()[i].getPart_type().lower() == "e" and mbr.getPartitions()[i].getPart_status() == "1"):
             puntero = mbr.getPartitions()[i].getPart_start()
             #generar reporte de ebr
-            generarReporteEBR(path, pathReport, puntero)
+            reports.append(generarReporteEBR(path, pathReport, puntero))
             #obtener ebr
             ebr = Ebr()
             with open(path, 'rb+') as archivo:
@@ -1385,11 +1388,26 @@ def generarReporteMBR(path, pathReport):
     pathReport = verificarNombre(pathReport)
 
     if(os.path.splitext(os.path.basename(pathReport))[1] == ".jpg"):
+        extension = "jpg"
         command = ["dot", "-Tjpg", "reportes/reporte_mbr.dot", "-o", pathReport]
     elif (os.path.splitext(os.path.basename(pathReport))[1] == ".png"):
+        extension = "png"
         command = ["dot", "-Tpng", "reportes/reporte_mbr.dot", "-o", pathReport]
     
     subprocess.run(command, check=True)
+
+    load_dotenv(".env")
+    aws_access_key_id = os.getenv('aws_access_key_id')
+    aws_secret_access_key = os.getenv('aws_secret_access_key')
+    bucket_name = 'contenedorpy2'
+
+    nombre_de_archivo = os.path.basename(pathReport)
+
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+    s3.upload_file(pathReport, bucket_name, 'reports/'+nombre_de_archivo)
+
+    return {"name": os.path.basename(pathReport), "type": extension}
+
 
 def generarReporteEBR(path, pathReport, puntero):
     code =  'digraph G {\n'
@@ -1452,12 +1470,29 @@ def generarReporteEBR(path, pathReport, puntero):
 
     pathReport = verificarNombre(pathReport)
 
+    extension = ""
+
     if(os.path.splitext(os.path.basename(pathReport))[1] == ".jpg"):
+        extension = ".jpg"
         command = ["dot", "-Tjpg", "reportes/reporte_ebr.dot", "-o", pathReport]
     elif (os.path.splitext(os.path.basename(pathReport))[1] == ".png"):
+        extension = ".png"
         command = ["dot", "-Tpng", "reportes/reporte_ebr.dot", "-o", pathReport]
     
     subprocess.run(command, check=True)
+
+    load_dotenv(".env")
+    aws_access_key_id = os.getenv('aws_access_key_id')
+    aws_secret_access_key = os.getenv('aws_secret_access_key')
+    bucket_name = 'contenedorpy2'
+
+    nombre_de_archivo = os.path.basename(pathReport)
+
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+    s3.upload_file(pathReport, bucket_name, 'reports/'+nombre_de_archivo)
+
+    return {"name": os.path.basename(pathReport), "type": extension}
+
 
 def generarReporteDisco(path, pathReport):
     code =  'digraph G {\n'
@@ -1524,16 +1559,36 @@ def generarReporteDisco(path, pathReport):
 
     pathReport = verificarNombre(pathReport)
 
+    extension = ""
+
     if(os.path.splitext(os.path.basename(pathReport))[1] == ".jpg"):
+        extension = ".jpg"
         command = ["dot", "-Tjpg", "reportes/reporte_disco.dot", "-o", pathReport]
     elif (os.path.splitext(os.path.basename(pathReport))[1] == ".png"):
+        extension = ".png"
         command = ["dot", "-Tpng", "reportes/reporte_disco.dot", "-o", pathReport]
 
     subprocess.run(command, check=True)
 
+    load_dotenv(".env")
+    aws_access_key_id = os.getenv('aws_access_key_id')
+    aws_secret_access_key = os.getenv('aws_secret_access_key')
+    bucket_name = 'contenedorpy2'
+
+    nombre_de_archivo = os.path.basename(pathReport)
+
+    s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+    s3.upload_file(pathReport, bucket_name, 'reports/'+nombre_de_archivo)
+    
+    return {"name": os.path.basename(pathReport), "type": extension}
+
 def generarReporteArchivo(path, part_formateada, ruta, pathReport):
     global mensajes
     if ruta == '"/users.txt"':
+        code = 'digraph G {\n'
+        code += '  subgraph cluster { margin="0.0" penwidth="0.0"\n'
+        code += '    tbl [shape=none fontname="Arial" label=<\n'
+        code += '        <table border="1" cellborder="0" cellspacing="0">\n'
         #obtener inicio de archivos users.txt
         ini_archivo = part_formateada.getPart_start()
         #verificar si esta formateada la particion
@@ -1560,9 +1615,48 @@ def generarReporteArchivo(path, part_formateada, ruta, pathReport):
             archivo.seek(ini_archivo)
             contenido = archivo.read(pos)
         contenido = contenido.decode('utf-8')
+        #escribir contenido en reporte
+        lineas = contenido.split('\n')
+        content = ""
+        for linea in lineas:
+            content += '        <tr><td bgcolor="white" align="left">'+linea+'</td></tr>\n'
         #crear reporte
-        with open(pathReport, 'w') as archivo:
-            archivo.write(contenido)
+        name_file = os.path.basename(pathReport)
+        nombre, extension = os.path.splitext(name_file)
+        path_file = verificarNombre('reportes/'+nombre+'.png')
+        code += '        <tr><td bgcolor="teal" align="left"><font color="white">'+name_file+75*" "+'</font></td></tr>\n'
+        code += content
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        </table>\n'
+        code += '    >];\n'
+        code += '  }\n'
+        code += '}'
+
+        with open("reportes/reporte_archivo.dot", "w") as archivo:
+            archivo.write(code)
+
+        #command = ["dot", "-Tjpg", "reportes/reporte_archivo.dot", "-o", pathReport]
+        command = ["dot", "-Tpng", "reportes/reporte_archivo.dot", "-o", path_file]
+
+        subprocess.run(command, check=True)
+
+        load_dotenv(".env")
+        aws_access_key_id = os.getenv('aws_access_key_id')
+        aws_secret_access_key = os.getenv('aws_secret_access_key')
+        bucket_name = 'contenedorpy2'
+
+        nombre_de_archivo = os.path.basename(path_file)
+
+
+        s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+        s3.upload_file(path_file, bucket_name, 'reports/'+nombre_de_archivo)
+
+        return {"name": nombre_de_archivo, "type": ".png"}
+
     else:
         pass
 
@@ -1632,3 +1726,7 @@ def getMessagesLogin():
 def getStatus():
     global status
     return status
+
+def getReports():
+    global reports
+    return reports

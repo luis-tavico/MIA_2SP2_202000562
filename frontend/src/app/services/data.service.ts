@@ -20,7 +20,7 @@ export class DataService {
   }
 
   getReports(data: any) {
-    return this.http.post(this.url+"/reports", data);
+    return this.http.get(this.url+"/reports", data);
   }
 
 }

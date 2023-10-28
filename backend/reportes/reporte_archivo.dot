@@ -1,0 +1,20 @@
+digraph G {
+  subgraph cluster { margin="0.0" penwidth="0.0"
+    tbl [shape=none fontname="Arial" label=<
+        <table border="1" cellborder="0" cellspacing="0">
+        <tr><td bgcolor="teal" align="left"><font color="white">usuarios.txt                                                                           </font></td></tr>
+        <tr><td bgcolor="white" align="left">1, G, root</td></tr>
+        <tr><td bgcolor="white" align="left">1, U, root, root, 123</td></tr>
+        <tr><td bgcolor="white" align="left">0, G, users</td></tr>
+        <tr><td bgcolor="white" align="left">3, G, usuarios</td></tr>
+        <tr><td bgcolor="white" align="left">3, U, usuarios, usuario1, abc</td></tr>
+        <tr><td bgcolor="white" align="left">0, U, usuarios, usuario2, 123</td></tr>
+        <tr><td bgcolor="white" align="left"> </td></tr>
+        <tr><td bgcolor="white" align="left"> </td></tr>
+        <tr><td bgcolor="white" align="left"> </td></tr>
+        <tr><td bgcolor="white" align="left"> </td></tr>
+        <tr><td bgcolor="white" align="left"> </td></tr>
+        </table>
+    >];
+  }
+}

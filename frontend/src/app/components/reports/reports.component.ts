@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-//import { ReportsService } from 'src/app/services/reports.service';
 import { DataService } from 'src/app/services/data.service';
 import { DomSanitizer } from '@angular/platform-browser';
 
@@ -10,17 +9,30 @@ import { DomSanitizer } from '@angular/platform-browser';
 })
 export class ReportsComponent {
 
-  files: any[] = [{file: "", name:"reporte1.txt", type:"txt"}, {file:"", name:"reporte2.txt", type:"txt"}];
-  url = "https://quickchart.io/graphviz?graph=digraph G { A -> B; }";
+  url = 'https://contenedorpy2.s3.us-east-2.amazonaws.com/reports/'
+  //files: any[] = [{name:"reporte", type:"png"}, {name:"disk.png", type:"png"}];
+  files: any[] = [];
+  index: number = 0;
+  title: string = "Titulo Reportes";
 
-  constructor(private service: DataService, private sanitizer: DomSanitizer) { }
+  constructor(private service: DataService, private sanitizer: DomSanitizer) { 
+    this.service.getReports({}).subscribe((data:any) => {
+      this.files = data.reports;
+      console.log(data.reports);
+    });
+  }
 
   item_selected(i:number) {
-    console.log(i);
+    this.index = i;
+    this.title = this.files[i].name;
   }
 
   getSafeUrl() {
-    return this.sanitizer.bypassSecurityTrustResourceUrl(this.url);
+    if (this.files.length == 0) {
+      return "";
+    } else {
+      return this.sanitizer.bypassSecurityTrustResourceUrl(this.url + this.files[this.index].name);
+    }
   }
 
 }
