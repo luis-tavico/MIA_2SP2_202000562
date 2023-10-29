@@ -1169,6 +1169,9 @@ def comando_ejecutar(parametro, valor):
             script.setRuta(valor)
         elif (parametro.lower() == "ejecutar"):
             if (script.errors == 0):
+                #verificar si existe la carpeta reportes
+                if not(os.path.exists("reportes")):
+                    os.makedirs("reportes")
                 #buscar particion en particiones montadas
                 path = ""
                 if script.getId() != "":
@@ -1708,7 +1711,7 @@ def clearValues():
     status = ""
 
 def limpiarValores():
-    global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_mkfile, mensajes_rmdisk, mensajesLogin, status
+    global comando, script, mensajes, respuesta, pregunta, mensajes_mkfile, mensajes_rmdisk, mensajesLogin, status
     comando = ""
     script = None
     mensajes = ""

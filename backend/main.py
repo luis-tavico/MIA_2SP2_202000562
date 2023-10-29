@@ -112,7 +112,7 @@ def logout():
                 new_lines = waiting_scripts.splitlines()
                 new_lines.extend(lines)
                 lines = new_lines
-    return jsonify({"message": "Sesion Finalizada", "status": "ok"}), 201
+    return jsonify({"message": "Sesion finalizada exitosamente.", "status": "Ok"}), 201
     
 @app.route("/reports", methods=["GET"])
 def reports():

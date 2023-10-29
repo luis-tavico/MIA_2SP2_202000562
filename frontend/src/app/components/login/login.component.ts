@@ -18,7 +18,7 @@ export class LoginComponent {
 
   login() {
     if (this.inputUsername != "" && this.inputPassword != "" && this.inputPartition !="") {
-      const command = 'login -user="'+this.inputUsername+'" -pass="'+this.inputPassword+'" -id='+this.inputPartition
+      const command = 'login -user='+this.inputUsername+' -pass='+this.inputPassword+' -id='+this.inputPartition
       const postData = { "request" : [command, "None"]}
       this.service.login(postData).subscribe(
         (response) => {
