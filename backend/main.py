@@ -31,7 +31,7 @@ def console():
         lines = content.splitlines()
         while len(lines) > 0:
             line = lines.pop(0)
-            if not (line.isspace()):
+            if (not line.isspace() and line != ""):
                 waiting_scripts = analizador(line)
                 if waiting_scripts == None:
                     pass
