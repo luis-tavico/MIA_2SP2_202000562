@@ -15,7 +15,7 @@ reports_list = []
 
 @app.route("/test", methods=["GET"])
 def test():
-    return jsonify({"message": "MIA 2S PY2"}), 200
+    return jsonify({"message": "MIA-2S-PY2-202000562"}), 200
 
 @app.route("/", methods=["POST"])
 def console():

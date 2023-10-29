@@ -1699,8 +1699,8 @@ def clearValues():
     global comando, script, particiones_montadas, usuario_actual, info, mensajes, respuesta, pregunta, mensajes_mkfile, mensajes_rmdisk, mensajesLogin, status
     comando = ""
     script = None
-    particiones_montadas = {}
-    usuario_actual = ""
+    #particiones_montadas = {}
+    #usuario_actual = ""
     info = []
     mensajes = ""
     respuesta = "None"
