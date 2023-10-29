@@ -31,7 +31,7 @@ export class ConsoleComponent {
       var commands = this.inputCodeConsole.nativeElement.value
       const postData = {"request": [commands, "None"]};
       
-      this.service.postCode(postData).subscribe(
+      this.service.setCode(postData).subscribe(
         (response) => {
           var r = response as any;
           var contenido_anterior = this.outputCodeConsole.nativeElement.innerHTML;
@@ -48,7 +48,7 @@ export class ConsoleComponent {
     enviarRespuesta(event: KeyboardEvent) {
       if (event.key === 'Enter') {
         const postData = {"request": ["", this.rspt]}
-        this.service.postCode(postData).subscribe(
+        this.service.setCode(postData).subscribe(
           (response) => {
             var r = response as any;
             var contenido_anterior = this.outputCodeConsole.nativeElement.innerHTML;

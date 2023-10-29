@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { DataService } from 'src/app/services/data.service';
 import { ToastrService } from 'ngx-toastr';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
@@ -13,20 +14,21 @@ export class LoginComponent {
   inputUsername: string = "";
   inputPassword: string = "";
 
-  constructor(private service: DataService, private toastr: ToastrService) { }
+  constructor(private router: Router, private service: DataService, private toastr: ToastrService) { }
 
   login() {
     if (this.inputUsername != "" && this.inputPassword != "" && this.inputPartition !="") {
       const command = 'login -user="'+this.inputUsername+'" -pass="'+this.inputPassword+'" -id='+this.inputPartition
       const postData = { "request" : [command, "None"]}
-      this.service.postLogin(postData).subscribe(
+      this.service.login(postData).subscribe(
         (response) => {
           var r = response as any;
           if (r.status == "Ok") {
             this.toastr.success('Exito', r.message, 
             {
               positionClass: 'toast-top-left'
-            });  
+            });
+            this.router.navigate(['/reports']);
           } else if (r.status == "Error") {
             this.toastr.error('Error', r.message, 
             {

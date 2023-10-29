@@ -6,21 +6,25 @@ import { HttpClient } from '@angular/common/http';
 })
 export class DataService {
 
-  //url = 'http://3.147.238.57'
-  url = 'http://127.0.0.1:5000';
+  url = 'http://18.219.252.98'
+  //url = 'http://127.0.0.1:5000';
 
   constructor(private http: HttpClient) { }
 
-  postCode(data: any) {
+  setCode(data: any) {
     return this.http.post(this.url+"/", data);
   }
 
-  postLogin(data: any) {
+  login(data: any) {
     return this.http.post(this.url+"/login", data);
   }
 
   getReports(data: any) {
     return this.http.get(this.url+"/reports", data);
+  }
+
+  logout(data: any) {
+    return this.http.post(this.url+"/logout", data);
   }
 
 }
