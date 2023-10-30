@@ -49,7 +49,7 @@ def console():
         setRespuesta(reply)
         while len(waiting_lines) > 0:
             line = waiting_lines.pop(0)
-            if not (line.isspace()):
+            if (not line.isspace() and line != ""):
                 waiting_scripts = analizador(line)
                 if waiting_scripts == None:
                     pass
