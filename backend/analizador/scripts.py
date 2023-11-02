@@ -84,6 +84,7 @@ def comando_activar(valor):
     #comandos de archivos y permisos
     elif (comando.lower() == "mkfile"):
         script = Mkfile()
+        mensajes_mkfile = ""
         mensajes_mkfile += '<span contentEditable="false" class="text-info">Ejecutando comando mkfile...</span><br>\n'
     elif (comando.lower() == "mkdir"):
         script = Mkdir()
@@ -783,6 +784,7 @@ def comando_ejecutar(parametro, valor):
                     grupo_existe = False
                     #leer archivo users.txt
                     #info = [ruta_disco, posicion_particion, contenido]
+                    print(info)
                     contenido = info[2]
                     lineas = contenido.splitlines()
                     for linea in lineas:
@@ -946,14 +948,18 @@ def comando_ejecutar(parametro, valor):
                                 pos = i
                                 break
                     if (usuario_existe):
-                        lineas[pos] = cont_editado
-                        info[2] = "\n".join(lineas)
-                        #Escribir en archivo users.txt
-                        with open(info[0], 'rb+') as archivo:
-                            archivo.seek(info[1])
-                            archivo.write((info[2]+"$").encode('utf-8'))
-                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Usuario eliminado exitosamente.</span><br>\n'
-                        mensajes += '<span contentEditable="false" class="text-info">...Comando rmusr ejecutado</span><br>\n'   
+                        if (lineas[pos]) == cont_editado:
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a eliminar no existe.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
+                        else:
+                            lineas[pos] = cont_editado
+                            info[2] = "\n".join(lineas)
+                            #Escribir en archivo users.txt
+                            with open(info[0], 'rb+') as archivo:
+                                archivo.seek(info[1])
+                                archivo.write((info[2]+"$").encode('utf-8'))
+                            mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Usuario eliminado exitosamente.</span><br>\n'
+                            mensajes += '<span contentEditable="false" class="text-info">...Comando rmusr ejecutado</span><br>\n'   
                     else:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> El usuario a eliminar no existe.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo eliminar el usuario.</span><br>\n'
@@ -1110,17 +1116,25 @@ def comando_ejecutar(parametro, valor):
                         os.makedirs(script.getPath())
                         mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'  
-                    except FileNotFoundError as ex:
+                    except FileExistsError as ex:
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'
+                    except Exception as ex:
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i>' + ex + '</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
+
                 else:
                     try:
                         os.mkdir(script.getPath())
                         mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'
-                    except FileNotFoundError as ex:
-                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i>' + ex + '</span><br>\n'
+                    except FileExistsError as ex:
+                        mensajes += '<span contentEditable="false" style="color: #2ECC71;"><i class="fa-solid fa-check"></i> Carpeta creada exitosamente.</span><br>\n'
+                        mensajes += '<span contentEditable="false" class="text-info">...Comando mkdir ejecutado</span><br>\n'
+                    except Exception as ex:
+                        mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i>' + str(ex) + '</span><br>\n'
                         mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
+
             else:
                 mensajes += '<span contentEditable="false" class="text-danger"><i class="fa-solid fa-xmark"></i> No se pudo crear la carpeta.</span><br>\n'
         else:
@@ -1587,7 +1601,7 @@ def generarReporteDisco(path, pathReport):
 
 def generarReporteArchivo(path, part_formateada, ruta, pathReport):
     global mensajes
-    if ruta == '"/users.txt"':
+    if ruta == '"/users.txt"' or ruta == '"/user.txt"':
         code = 'digraph G {\n'
         code += '  subgraph cluster { margin="0.0" penwidth="0.0"\n'
         code += '    tbl [shape=none fontname="Arial" label=<\n'
