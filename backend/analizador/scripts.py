@@ -1673,9 +1673,55 @@ def generarReporteArchivo(path, part_formateada, ruta, pathReport):
         s3.upload_file(path_file, bucket_name, 'reports/'+nombre_de_archivo)
 
         return {"name": nombre_de_archivo, "type": ".png"}
-
     else:
-        pass
+        code = 'digraph G {\n'
+        code += '  subgraph cluster { margin="0.0" penwidth="0.0"\n'
+        code += '    tbl [shape=none fontname="Arial" label=<\n'
+        code += '        <table border="1" cellborder="0" cellspacing="0">\n'
+        #obtener contenido de archivo
+        with open(ruta.strip('"'), 'r') as archivo:
+            contenido = archivo.read()
+        print(contenido)
+        #escribir contenido en reporte
+        lineas = contenido.split('\n')
+        content = ""
+        for linea in lineas:
+            content += '        <tr><td bgcolor="white" align="left">'+linea+'</td></tr>\n'
+        #crear reporte
+        name_file = os.path.basename(pathReport)
+        nombre, extension = os.path.splitext(name_file)
+        path_file = verificarNombre('reportes/'+nombre+'.png')
+        code += '        <tr><td bgcolor="teal" align="left"><font color="white">'+name_file+'</font></td></tr>\n'
+        code += content
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        <tr><td bgcolor="white" align="left"> </td></tr>\n'
+        code += '        </table>\n'
+        code += '    >];\n'
+        code += '  }\n'
+        code += '}'
+
+        with open("reportes/reporte_archivo.dot", "w") as archivo:
+            archivo.write(code)
+
+        command = ["dot", "-Tpng", "reportes/reporte_archivo.dot", "-o", path_file]
+
+        subprocess.run(command, check=True)
+
+        load_dotenv(".env")
+        aws_access_key_id = os.getenv('aws_access_key_id')
+        aws_secret_access_key = os.getenv('aws_secret_access_key')
+        bucket_name = 'contenedorpy2'
+
+        nombre_de_archivo = os.path.basename(path_file)
+
+
+        s3 = boto3.client('s3', aws_access_key_id=aws_access_key_id, aws_secret_access_key=aws_secret_access_key)
+        s3.upload_file(path_file, bucket_name, 'reports/'+nombre_de_archivo)
+
+        return {"name": nombre_de_archivo, "type": ".png"}
 
 def verificarNombre(pathReport):
     n = 1
