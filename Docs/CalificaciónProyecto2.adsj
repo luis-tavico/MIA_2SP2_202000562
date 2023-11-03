@@ -1,0 +1,88 @@
+#CREACION DE DISCOS
+mkdisk -size=75 -unit=M -path=/home/ejecucion1/d1.dsk               
+mkdisk -size=90 -unit=M -path=/home/ejecucion2/d2.dsk
+mkdisk -size=75 -unit=M -path="/home/ejecucion 2/eliminar1.dsk"                    
+mkdisk -size=75 -unit=M -path=/home/ejecucion1/eliminar2.dsk             
+mkdisk -size=75 -unit=M -path=/home/ejecucion 2/d2.dsk 				#debe dar error porque no está entre comillas
+
+#ELIMINACION DE DISCOS
+#rmdisk -path="/home/ejecucion 2/eliminar1.dsk"   
+#rmdisk -path=/home/ejecucion1/eliminar2.dsk   
+
+
+#CREACION DE PARTICIONES PRIMARIAS Y EXTENDIDAS
+
+#Disco 1
+fdisk -type=L -unit=M -name=Part5 -size=1 -path=/home/ejecucion1/d1.dsk 		#Debe dar error porque no se han creado las extendidas
+fdisk -type=P -unit=M -name=Part1 -size=10 -path=/home/ejecucion1/d1.dsk
+fdisk -type=P -unit=M -name=Part2 -size=20 -path=/home/ejecucion1/d1.dsk 
+fdisk -type=E -unit=M -name=Part3 -size=5 -path=/home/ejecucion1/d1.dsk  -fit=FF
+fdisk -type=L -unit=M -name=Part4 -size=1 -path=/home/ejecucion1/d1.dsk
+fdisk -type=L -unit=M -name=Part5 -size=1 -path=/home/ejecucion1/d1.dsk
+fdisk -type=L -unit=M -name=Part6 -size=2 -path=/home/ejecucion1/d1.dsk 
+fdisk -type=P -unit=M -name=Part7 -size=2 -path=/home/ejecucion1/d1.dsk
+
+#Disco 2
+fdisk -type=P -unit=M -name=Part12 -size=10 -path=/home/ejecucion2/d2.dsk
+fdisk -type=P -unit=M -name=Part22 -size=20 -path=/home/ejecucion2/d2.dsk 
+fdisk -type=P -unit=M -name=Part32 -size=22 -path=/home/ejecucion2/d2.dsk
+fdisk -type=P -unit=M -name=Part42 -size=25 -path=/home/ejecucion2/d2.dsk
+
+#MOUNT
+mount -path=/home/ejecucion1/d1.dsk -name=Part1 
+mount -path=/home/ejecucion1/d1.dsk -name=Part2 
+mount -path=/home/ejecucion1/d1.dsk -name=Part4 
+mount -path=/home/ejecucion1/d1.dsk -name=Part3 
+mount -path=/home/ejecucion1/d1.dsk -name=Part7 
+mount -path=/home/ejecucion2/d2.dsk -name=Part12
+mount -path=/home/ejecucion2/d2.dsk -name=Part22
+mount -path=/home/ejecucion2/d2.dsk -name=Part32
+mount -path=/home/ejecucion2/d2.dsk -name=Part42
+mount -path=/home/ejecucion2/d2.dsk -name=Part48 #Debe mostrar error porque no existe esa particion
+
+#MKFS A PARTICIONES
+mkfs -type=fast -id=_idPart1_
+mkfs -type=fast -id=_idPart12_
+
+#LOGIN DE USUARIO ROOT
+login -user=root -pass=123 -id=_idPart1_
+login -user=root2 -pass=1234 -id=_idPart1_ #Debe mostrar error porque no existe el usuario o porque no se ha hecho logout
+
+#CREACION ARCHIVOS
+mkdir -path="/home"
+mkdir -path="/root"
+mkdir -path="/root/files"
+mkdir -path="/root/files/documents"
+mkdir -path="/admin/onedrive" #no existe ruta
+mkdir -path="/root/files/mis arhivos/fotos" -r #no existe ruta archivos, se crearán
+mkdir -path="/root/files/mis arhivos/videos"
+mkdir -path="/root/files/mis arhivos/musica"
+mkfile -path="/root/files/prueba.txt" -size=64
+mkfile -path"/root/files/mis archivos/Prueba Carpeta/prueba2.txt" -r -cont=/home/documento.txt
+mkfile -path"/root/files/mis archivos/Prueba Carpeta/xd/prueba2.txt" -cont=/home/documento.txt   #debe dar error porque no existen las carpetas padre
+
+
+#CREACION GRUPO Y USUARIOS
+mkgrp -name=usuarios
+mkusr -user=user1 -pass=usuario -grp=usuarios
+mkusr -user=user1 -pass=usuario -grp=root #Error de que usuario ya existe, aunque sea de otro grupo
+mkusr -user=user2 -pass=usuario -grp=usuarios2 #Error de que grupo no existe
+mkusr -user=user2 -pass=123 -grp=usuarios #Error de que grupo no existe
+rmgrp -name=usuarios #Eliminar grupo usuarios
+rmusr -user=user2 #eliminar usuario user2
+rmusr -user=user2 #No se encontró user2 porque ya fue eliminado
+
+#REPORTES
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/mbr.png -name=mbr
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/disk.png -name=disk
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/bm_inode.txt -name=bm_inode
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/bm_block.txt -name=bm_block
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/tree/tree.jpg -name=tree
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/sb.png -name=sb
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/files/reporteFile.txt -ruta="/user.txt" -name=file
+rep -id=_idPart1_ -path=/ejecucion1/Ejecuciones/reportes/files/reporteFile2.txt -ruta="/root/files/prueba.txt" -name=file
+
+
+#Crear nuevamente particiones
+fdisk -type=L -unit=M -name=Part4 -size=1 -path=/home/ejecucion1/d1.dsk
+fdisk -type=P -unit=M -name=Part1 -size=10 -path=/home/ejecucion1/d1.dsk
